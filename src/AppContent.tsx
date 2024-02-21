@@ -46,15 +46,15 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
     const [query, setQuery] = useState<RuleGroupType>({
         combinator: 'and',
         rules: [
-            { field: 'firstName', operator: 'beginsWith', value: 'Stev' },
-            { field: 'lastName', operator: 'in', value: ['Vai', 'Vaughan'] },
+            { field: 'feature place holder', operator: '>', value: 'threshold place holder' },
+            { field: 'feature place holder', operator: '<', value: 'threshold place holder' },
         ],
     });
     const [displayQuery, setDisplayQuery] = useState<RuleGroupType>({
         combinator: 'and',
         rules: [
-            { field: 'firstName', operator: 'beginsWith', value: 'Stev' },
-            { field: 'lastName', operator: 'in', value: ['Vai', 'Vaughan'] },
+            { field: 'feature place holder', operator: '>', value: 'threshold place holder' },
+            { field: 'feature place holder', operator: '<', value: 'threshold place holder' },
         ],
     });
     const [savedGroups, setSavedGroups] = useState<{ name: string; query: string }[]>([]);

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button, List, Modal} from 'antd';
 import {QueryBuilder, RuleGroupType} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
-import {fields} from "./QueryBuilder";
+import {fields} from "./Fields";
 import {useAppContext} from "../AppContent";
 
 

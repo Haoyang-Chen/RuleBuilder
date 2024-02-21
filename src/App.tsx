@@ -5,6 +5,7 @@ import SavedRuleList from "./components/SavedRuleList";
 import SaveGroup from './components/SaveGroup';
 import CustomQueryBuilder from './components/QueryBuilder';
 import SaveRule from "./components/SaveRule";
+import Debugger from "./components/Debugger";
 
 const App: React.FC = () => {
     return (
@@ -22,6 +23,7 @@ const App: React.FC = () => {
                 <SaveGroup />
                 <SaveRule />
             </div>
+            <Debugger />
         </StateProvider>
     );
 };

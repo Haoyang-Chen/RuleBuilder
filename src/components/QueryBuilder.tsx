@@ -8,11 +8,7 @@ import 'react-querybuilder/dist/query-builder.css';
 import {QueryBuilderAntD} from '@react-querybuilder/antd';
 import {useAppContext} from '../AppContent';
 import {ExportButton, ImportButton} from "./ExportImportButtons";
-
-export const fields: Field[] = [
-    { name: 'firstName', label: 'First Name' },
-    { name: 'lastName', label: 'Last Name' },
-];
+import {fields} from "./Fields";
 
 const CustomQueryBuilder = () => {
     const {
@@ -68,20 +64,23 @@ const CustomQueryBuilder = () => {
                             style={{ marginBottom: '10px' ,marginTop: '10px', width:'378px'}}
                         />
                     </div>
-                    <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
-                        <QueryBuilderAntD>
-                            <QueryBuilder
-                                fields={fields}
-                                query={query}
-                                onQueryChange={(q: any) => setQuery(q)}
-                                showNotToggle
-                                controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
-                                controlElements={{
-                                    addRuleAction: AddRuleButtons,
-                                }}
-                            />
-                        </QueryBuilderAntD>
-                    </QueryBuilderDnD>
+                    <div style={{ marginBottom: '10px' ,marginTop: '10px', width:'900px'}}>
+                        <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
+                            <QueryBuilderAntD>
+                                <QueryBuilder
+                                    fields={fields}
+                                    query={query}
+                                    onQueryChange={(q: any) => setQuery(q)}
+                                    showNotToggle
+                                    addRuleToNewGroups
+                                    controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
+                                    controlElements={{
+                                        addRuleAction: AddRuleButtons,
+                                    }}
+                                />
+                            </QueryBuilderAntD>
+                        </QueryBuilderDnD>
+                    </div>
                 </div>
             </div>
     );
