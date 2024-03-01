@@ -1,20 +1,43 @@
-import {useAppContext} from "../AppContent";
-import {Input, Modal} from "antd";
+import React from 'react';
+import { useAppContext } from "../AppContent";
+import { Input, Modal, message } from "antd";
 
-const SaveRule= () => {
-    const {query,
+const SaveRule = () => {
+    const {
+        query,
         savedRules,
         setSavedRules,
         saveRuleModalVisible,
         setSaveRuleModalVisible,
         ruleName,
         setRuleName,
-        result}=useAppContext();
+        result
+    } = useAppContext();
 
     const handleModalSaveOk = () => {
-        setSavedRules([...savedRules, { name: ruleName,result:result, query: JSON.stringify(query) }]);
-        setSaveRuleModalVisible(false);
-        setRuleName('');
+        const existingRuleIndex = savedRules.findIndex(rule => rule.name === ruleName);
+        if (existingRuleIndex !== -1) {
+            Modal.confirm({
+                // title: 'Replace Check',
+                content: 'Name already exists, replace with the new one？',
+                onOk() {
+                    const newSavedRules = [...savedRules];
+                    newSavedRules[existingRuleIndex] = { name: ruleName, result: result, query: JSON.stringify(query) };
+                    setSavedRules(newSavedRules);
+                    message.success('Rule replaced');
+                    setSaveRuleModalVisible(false);
+                    setRuleName('');
+                },
+                onCancel() {
+                    message.info('Replacement cancelled');
+                }
+            });
+        } else {
+            setSavedRules([...savedRules, { name: ruleName, result: result, query: JSON.stringify(query) }]);
+            message.success('Rule Saved');
+            setSaveRuleModalVisible(false);
+            setRuleName('');
+        }
     };
 
     const handleModalSaveCancel = () => {
@@ -22,7 +45,7 @@ const SaveRule= () => {
         setRuleName('');
     };
 
-    return(
+    return (
         <Modal
             title="Save Rule"
             visible={saveRuleModalVisible}
@@ -36,6 +59,6 @@ const SaveRule= () => {
             />
         </Modal>
     )
-}
+};
 
 export default SaveRule;

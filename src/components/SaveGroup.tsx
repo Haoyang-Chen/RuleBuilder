@@ -1,5 +1,5 @@
 import {useAppContext} from "../AppContent";
-import {Input, Modal} from "antd";
+import {Input, message, Modal} from "antd";
 
 const SaveGroup= () => {
     const {query,
@@ -10,10 +10,36 @@ const SaveGroup= () => {
         groupName,
         setGroupName}=useAppContext();
 
+    // const handleModalSaveOk = () => {
+    //     setSavedGroups([...savedGroups, { name: groupName, query: JSON.stringify(query) }]);
+    //     setSaveGroupModalVisible(false);
+    //     setGroupName('');
+    // };
+
     const handleModalSaveOk = () => {
-        setSavedGroups([...savedGroups, { name: groupName, query: JSON.stringify(query) }]);
-        setSaveGroupModalVisible(false);
-        setGroupName('');
+        const existingRuleIndex = savedGroups.findIndex(group => group.name === groupName);
+        if (existingRuleIndex !== -1) {
+            Modal.confirm({
+                // title: 'Replace Check',
+                content: 'Name already exists, replace with the new one？',
+                onOk() {
+                    const newSavedGroups = [...savedGroups];
+                    newSavedGroups[existingRuleIndex] = { name: groupName, query: JSON.stringify(query) };
+                    setSavedGroups(newSavedGroups);
+                    message.success('Rule replaced');
+                    setSaveGroupModalVisible(false);
+                    setGroupName('');
+                },
+                onCancel() {
+                    message.info('Replacement cancelled');
+                }
+            });
+        } else {
+            setSavedGroups([...savedGroups, { name: groupName, query: JSON.stringify(query) }]);
+            message.success('Rule Saved');
+            setSaveGroupModalVisible(false);
+            setGroupName('');
+        }
     };
 
     const handleModalSaveCancel = () => {

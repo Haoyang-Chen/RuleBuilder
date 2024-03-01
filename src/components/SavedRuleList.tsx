@@ -69,6 +69,7 @@ const SavedRuleList= () => {
             <Modal
                 title="Check Rule"
                 visible={checkRuleModalVisible}
+                onCancel={handleModalCheckCancel}
                 footer={[
                     <Button key="cancel" onClick={handleModalCheckCancel}>
                         Cancel

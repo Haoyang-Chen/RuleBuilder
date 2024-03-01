@@ -73,7 +73,7 @@ const SavedGroupList= () => {
             <Modal
                 title="Check Group"
                 visible={checkGroupModalVisible}
-                // onCancel={handleModalCheckCancel}
+                onCancel={handleModalCheckCancel}
                 footer={[
                     <Button key="cancel" onClick={handleModalCheckCancel}>
                         Cancel
