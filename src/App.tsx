@@ -24,6 +24,7 @@ const App: React.FC = () => {
                 <SaveRule />
             </div>
             <Debugger />
+            <div style={{height:'40px'}}></div>
         </StateProvider>
     );
 };

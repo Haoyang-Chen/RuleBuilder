@@ -1,11 +1,15 @@
 import {QueryBuilderDnD} from '@react-querybuilder/dnd';
 import * as ReactDnD from 'react-dnd';
 import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
-import type {ActionWithRulesAndAddersProps, Field} from 'react-querybuilder';
-import {QueryBuilder} from 'react-querybuilder';
+import type {
+    ActionWithRulesAndAddersProps,
+    CombinatorSelectorProps,
+    OptionList
+} from 'react-querybuilder';
+import {QueryBuilder, ValueSelector, Option} from 'react-querybuilder';
 import {Button, Input} from 'antd';
 import 'react-querybuilder/dist/query-builder.css';
-import {QueryBuilderAntD} from '@react-querybuilder/antd';
+import {QueryBuilderAntD,AntDValueSelector} from '@react-querybuilder/antd';
 import {useAppContext} from '../AppContent';
 import {ExportButton, ImportButton} from "./ExportImportButtons";
 import {fields} from "./Fields";
@@ -44,6 +48,24 @@ const CustomQueryBuilder = () => {
         );
     }
 
+    const CombinatorSelector = (props: CombinatorSelectorProps) => {
+        const options: OptionList = [
+            { name: 'And', label: 'AND' },
+            { name: 'Or', label: 'OR' },
+            { name:'GOR2', label:'GOR2'}
+        ];
+
+        return (
+            <AntDValueSelector
+                {...props}
+                options={options}
+                value={props.value}
+                handleOnChange={props.handleOnChange}
+            />
+        );
+    };
+
+
 
     return (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -76,6 +98,7 @@ const CustomQueryBuilder = () => {
                                     controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
                                     controlElements={{
                                         addRuleAction: AddRuleButtons,
+                                        combinatorSelector: CombinatorSelector
                                     }}
                                 />
                             </QueryBuilderAntD>
