@@ -26,6 +26,8 @@ interface StateContextType {
     setGroupName: React.Dispatch<React.SetStateAction<string>>;
     ruleName: string;
     setRuleName: React.Dispatch<React.SetStateAction<string>>;
+    operationResultName: {name:string,id:string}[];
+    setOperationResultName: React.Dispatch<React.SetStateAction<{name:string,id:string}[]>>;
 }
 
 const StateContext = createContext<StateContextType | undefined>(undefined);
@@ -44,14 +46,14 @@ interface StateProviderProps {
 
 export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
     const [query, setQuery] = useState<RuleGroupType>({
-        combinator: 'and',
+        combinator: 'AND',
         rules: [
             { field: 'feature place holder', operator: '>', value: 'threshold place holder' },
             { field: 'feature place holder', operator: '<', value: 'threshold place holder' },
         ],
     });
     const [displayQuery, setDisplayQuery] = useState<RuleGroupType>({
-        combinator: 'and',
+        combinator: 'AND',
         rules: [
             { field: 'feature place holder', operator: '>', value: 'threshold place holder' },
             { field: 'feature place holder', operator: '<', value: 'threshold place holder' },
@@ -67,6 +69,7 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
     const [checkRuleModalVisible, setCheckRuleModalVisible] = useState<boolean>(false);
     const [groupName, setGroupName] = useState<string>('');
     const [ruleName, setRuleName] = useState<string>('');
+    const [operationResultName, setOperationResultName] = useState<{name:string,id:string}[]>([]);
 
     return (
         <StateContext.Provider value={{
@@ -94,6 +97,8 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
             setGroupName,
             ruleName,
             setRuleName,
+            operationResultName,
+            setOperationResultName
         }}>
             {children}
         </StateContext.Provider>

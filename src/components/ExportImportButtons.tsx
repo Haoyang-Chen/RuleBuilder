@@ -5,9 +5,10 @@ import {Button, Input} from 'antd';
 export const ExportButton = () => {
     const {query,
         savedGroups,
-        savedRules}=useAppContext()
+        savedRules,
+        operationResultName}=useAppContext()
     const exportState = () => {
-        const state={query,savedGroups, savedRules};
+        const state={query,savedGroups, savedRules, operationResultName};
         const data = JSON.stringify(state);
         const blob = new Blob([data], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -27,7 +28,8 @@ export const ImportButton = () => {
     const {
         setQuery,
         setSavedGroups,
-        setSavedRules}=useAppContext()
+        setSavedRules,
+        setOperationResultName}=useAppContext()
 
     const importState = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -42,6 +44,7 @@ export const ImportButton = () => {
                     setQuery(data.query);
                     setSavedGroups(data.savedGroups);
                     setSavedRules(data.savedRules);
+                    setOperationResultName(data.operationResultName);
                 }
             } catch (error) {
                 console.error('Error parsing JSON file:', error);

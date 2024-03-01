@@ -1,18 +1,21 @@
 import {QueryBuilderDnD} from '@react-querybuilder/dnd';
 import * as ReactDnD from 'react-dnd';
 import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
-import type {
+import {
     ActionWithRulesAndAddersProps,
     CombinatorSelectorProps,
-    OptionList
+    OptionList, ValueEditorProps, ValueEditor, ActionProps, ActionElement
 } from 'react-querybuilder';
-import {QueryBuilder, ValueSelector, Option} from 'react-querybuilder';
+import {QueryBuilder} from 'react-querybuilder';
 import {Button, Input} from 'antd';
 import 'react-querybuilder/dist/query-builder.css';
-import {QueryBuilderAntD,AntDValueSelector} from '@react-querybuilder/antd';
+import {QueryBuilderAntD,AntDValueSelector,AntDValueEditor, AntDActionElement} from '@react-querybuilder/antd';
 import {useAppContext} from '../AppContent';
 import {ExportButton, ImportButton} from "./ExportImportButtons";
 import {fields} from "./Fields";
+import React, {useState} from "react";
+
+type AntDValueEditorProps = ValueEditorProps & { extraProps?: Record<string, any> };
 
 const CustomQueryBuilder = () => {
     const {
@@ -21,7 +24,9 @@ const CustomQueryBuilder = () => {
         result,
         setResult,
         setSaveGroupModalVisible,
-        setSaveRuleModalVisible}=useAppContext();
+        setSaveRuleModalVisible,
+        operationResultName,
+        setOperationResultName}=useAppContext();
 
 
 
@@ -52,7 +57,7 @@ const CustomQueryBuilder = () => {
         const options: OptionList = [
             { name: 'And', label: 'AND' },
             { name: 'Or', label: 'OR' },
-            { name:'GOR2', label:'GOR2'}
+            { name:'Gor2', label:'GOR2'}
         ];
 
         return (
@@ -64,6 +69,76 @@ const CustomQueryBuilder = () => {
             />
         );
     };
+
+    const CustomValueEditor = (props: AntDValueEditorProps) => {
+        const { rule,handleOnChange} = props;
+        //
+        // const [value, setValue] = useState('');
+        //
+        //
+        // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        //     setValue(e.target.value);
+        //     const inputValue = e.target.value;
+        //     const ruleIndex = operationResultName.findIndex(item => item.id === rule.id);
+        //     if (ruleIndex !== -1) {
+        //         const updatedOperationResultName = [...operationResultName];
+        //         updatedOperationResultName[ruleIndex] = { ...updatedOperationResultName[ruleIndex], name: inputValue };
+        //         setOperationResultName(updatedOperationResultName);
+        //     } else {
+        //         if (rule.id) {
+        //             setOperationResultName([...operationResultName, { name: inputValue, id: rule.id }]);
+        //         }
+        //     }
+        //
+        // };
+
+        return (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <AntDValueEditor {...props} />
+                {/*<div style={{ marginLeft: '30px' }}>*/}
+                {/*    <Input placeholder="Operation Result Name" value={value} onChange={handleInputChange} />*/}
+                {/*</div>*/}
+            </div>
+        );
+    };
+
+    const RemoveRuleAction = (props: ActionProps) => {
+        const { path } = props;
+        const rule = query.rules[path[0]];
+        const [inputValue, setInputValue] = React.useState(() => {
+            const existingName = operationResultName.find(item => item.id === rule.id);
+            return existingName ? existingName.name : '';
+        });
+
+        const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            setInputValue(e.target.value);
+        };
+
+        const handleInputBlur = () => {
+            const ruleIndex = operationResultName.findIndex(item => item.id === rule.id);
+            if (ruleIndex !== -1) {
+                const updatedOperationResultName = [...operationResultName];
+                updatedOperationResultName[ruleIndex] = { ...updatedOperationResultName[ruleIndex], name: inputValue };
+                setOperationResultName(updatedOperationResultName);
+            } else {
+                if (rule.id) {
+                    setOperationResultName([...operationResultName, { name: inputValue, id: rule.id }]);
+                }
+            }
+        };
+
+        return (
+            <div style={{display:'flex'}}>
+                <div style={{ marginLeft: '30px' }}>
+                    <Input placeholder="Operation Result Name" value={inputValue} onChange={handleInputChange} onBlur={handleInputBlur} />
+                </div>
+                <AntDActionElement{...props} />
+            </div>
+        );
+    };
+
+
+
 
 
 
@@ -98,7 +173,8 @@ const CustomQueryBuilder = () => {
                                     controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
                                     controlElements={{
                                         addRuleAction: AddRuleButtons,
-                                        combinatorSelector: CombinatorSelector
+                                        combinatorSelector: CombinatorSelector,
+                                        removeRuleAction: RemoveRuleAction,
                                     }}
                                 />
                             </QueryBuilderAntD>
