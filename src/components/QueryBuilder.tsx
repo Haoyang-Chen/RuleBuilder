@@ -4,12 +4,12 @@ import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
 import {
     ActionWithRulesAndAddersProps,
     CombinatorSelectorProps,
-    OptionList, ValueEditorProps, ValueEditor, ActionProps, ActionElement
+    OptionList, ValueEditorProps, ValueSelector, ActionProps, ActionElement, OperatorSelectorProps
 } from 'react-querybuilder';
 import {QueryBuilder} from 'react-querybuilder';
 import {Button, Input} from 'antd';
 import 'react-querybuilder/dist/query-builder.css';
-import {QueryBuilderAntD,AntDValueSelector,AntDValueEditor, AntDActionElement} from '@react-querybuilder/antd';
+import {QueryBuilderAntD,AntDValueSelector, AntDActionElement} from '@react-querybuilder/antd';
 import {useAppContext} from '../AppContent';
 import {ExportButton, ImportButton} from "./ExportImportButtons";
 import {fields} from "./Fields";
@@ -70,36 +70,21 @@ const CustomQueryBuilder = () => {
         );
     };
 
-    const CustomValueEditor = (props: AntDValueEditorProps) => {
-        const { rule,handleOnChange} = props;
-        //
-        // const [value, setValue] = useState('');
-        //
-        //
-        // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        //     setValue(e.target.value);
-        //     const inputValue = e.target.value;
-        //     const ruleIndex = operationResultName.findIndex(item => item.id === rule.id);
-        //     if (ruleIndex !== -1) {
-        //         const updatedOperationResultName = [...operationResultName];
-        //         updatedOperationResultName[ruleIndex] = { ...updatedOperationResultName[ruleIndex], name: inputValue };
-        //         setOperationResultName(updatedOperationResultName);
-        //     } else {
-        //         if (rule.id) {
-        //             setOperationResultName([...operationResultName, { name: inputValue, id: rule.id }]);
-        //         }
-        //     }
-        //
-        // };
-
-        return (
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-                <AntDValueEditor {...props} />
-                {/*<div style={{ marginLeft: '30px' }}>*/}
-                {/*    <Input placeholder="Operation Result Name" value={value} onChange={handleInputChange} />*/}
-                {/*</div>*/}
-            </div>
-        );
+    const operatorSelector = (props: OperatorSelectorProps) => {
+        const options: OptionList = [
+            { name: '=', label: '=' },
+            { name: '!=', label: '!=' },
+            { name: '>', label: '>' },
+            { name: '>=', label: '>=' },
+            { name: '<', label: '<' },
+            { name: '<=', label: '<=' },
+        ];
+        return <AntDValueSelector
+            {...props}
+            options={options}
+            value={props.value}
+            handleOnChange={props.handleOnChange}
+        />;
     };
 
     const RemoveRuleAction = (props: ActionProps) => {
@@ -129,7 +114,7 @@ const CustomQueryBuilder = () => {
 
         return (
             <div style={{display:'flex'}}>
-                <div style={{ marginLeft: '30px' }}>
+                <div style={{ marginLeft: '30px',marginRight: '30px',width: '200px' }}>
                     <Input placeholder="Operation Result Name" value={inputValue} onChange={handleInputChange} onBlur={handleInputBlur} />
                 </div>
                 <AntDActionElement{...props} />
@@ -153,9 +138,9 @@ const CustomQueryBuilder = () => {
                         <ImportButton />
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop:'0px', marginBottom: '10px'}}>
-                        <div style={{ whiteSpace: 'nowrap' }}>Result Name:</div>
+                        <div style={{ whiteSpace: 'nowrap' }}>Rule Result Name:</div>
                         <Input
-                            placeholder="Result Name"
+                            placeholder="Rule Result Name"
                             value={result}
                             onChange={(e) => setResult(e.target.value)}
                             style={{ marginBottom: '10px' ,marginTop: '10px', width:'378px'}}
@@ -175,6 +160,7 @@ const CustomQueryBuilder = () => {
                                         addRuleAction: AddRuleButtons,
                                         combinatorSelector: CombinatorSelector,
                                         removeRuleAction: RemoveRuleAction,
+                                        operatorSelector: operatorSelector
                                     }}
                                 />
                             </QueryBuilderAntD>
