@@ -6,9 +6,11 @@ export const ExportButton = () => {
     const {query,
         savedGroups,
         savedRules,
-        operationResultName}=useAppContext()
+        operationResultName,
+        ruleResult,
+        fields}=useAppContext()
     const exportState = () => {
-        const state={query,savedGroups, savedRules, operationResultName};
+        const state={query,savedGroups, savedRules, operationResultName,ruleResult,fields};
         const data = JSON.stringify(state);
         const blob = new Blob([data], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -29,7 +31,9 @@ export const ImportButton = () => {
         setQuery,
         setSavedGroups,
         setSavedRules,
-        setOperationResultName}=useAppContext()
+        setOperationResultName,
+        setRuleResult,
+        setFields}=useAppContext()
 
     const importState = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -45,6 +49,8 @@ export const ImportButton = () => {
                     setSavedGroups(data.savedGroups);
                     setSavedRules(data.savedRules);
                     setOperationResultName(data.operationResultName);
+                    setRuleResult(data.ruleResult);
+                    setFields(data.fields);
                 }
             } catch (error) {
                 console.error('Error parsing JSON file:', error);

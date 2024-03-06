@@ -6,11 +6,15 @@ import SaveGroup from './components/SaveGroup';
 import CustomQueryBuilder from './components/QueryBuilder';
 import SaveRule from "./components/SaveRule";
 import Debugger from "./components/Debugger";
+import SavedFeatureList from "./components/SavedFeatureList";
 
 const App: React.FC = () => {
     return (
         <StateProvider>
             <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '50px' }}>
+                <div style={{ marginRight: '20px' }}>
+                    <SavedFeatureList />
+                </div>
                 <div style={{ marginRight: '20px' }}>
                     <SavedRuleList />
                 </div>

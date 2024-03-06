@@ -1,6 +1,6 @@
 import {Field} from "react-querybuilder";
 
-export const fields: Field[] = [
+export const ECGfields: Field[] = [
     { name: 'sinus', label: 'SINUS' },
     { name: 'rr_diff', label: 'RR_DIFF' },
     { name: 'hr', label: 'HR' },

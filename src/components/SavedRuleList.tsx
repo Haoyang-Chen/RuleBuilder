@@ -1,7 +1,6 @@
 import React from 'react';
 import {Button, Input, List, Modal} from 'antd';
 import {QueryBuilder, RuleGroupType} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
-import {fields} from "./Fields";
 import {useAppContext} from "../AppContent";
 
 
@@ -15,9 +14,10 @@ const SavedRuleList= () => {
         setSavedRules,
         checkRuleModalVisible,
         setCheckRuleModalVisible,
-        setResult,
+        setRuleResult,
         displayResult,
-        setDisplayResult}=useAppContext();
+        setDisplayResult,
+        fields}=useAppContext();
 
 
     const handleCheck = (index: number) => {
@@ -29,7 +29,7 @@ const SavedRuleList= () => {
     };
 
     const handleLoad = () => {
-        setResult(displayResult);
+        setRuleResult(displayResult);
         setQuery(displayQuery);
     };
 
@@ -51,10 +51,11 @@ const SavedRuleList= () => {
 
     return (
         <>
-            <div style={{ border: '2px solid #ccc', borderRadius: '8px', padding: '10px', marginTop: '20px' }}>
+            <div style={{ border: '2px solid #ccc', borderRadius: '8px', padding: '10px', marginTop: '20px', backgroundColor: '#EBF5FB'}}>
                 <h3>Saved Rules</h3>
                 <List
                     dataSource={savedRules}
+                    locale={{ emptyText: ' ' }}
                     renderItem={(item, index) => (
                         <List.Item
                             actions={[

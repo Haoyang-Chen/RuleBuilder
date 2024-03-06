@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {Button, List, Modal} from 'antd';
 import {QueryBuilder, RuleGroupType} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
-import {fields} from "./Fields";
 import {useAppContext} from "../AppContent";
 
 
@@ -14,7 +13,8 @@ const SavedGroupList= () => {
         savedGroups,
         setSavedGroups,
         checkGroupModalVisible,
-        setCheckGroupModalVisible}=useAppContext();
+        setCheckGroupModalVisible,
+        fields}=useAppContext();
 
 
     const handleCheck = (index: number) => {
@@ -55,10 +55,11 @@ const SavedGroupList= () => {
 
     return (
         <>
-        <div style={{ border: '2px solid #ccc', borderRadius: '8px', padding: '10px', marginTop: '20px' }}>
+        <div style={{ border: '2px solid #ccc', borderRadius: '8px', padding: '10px', marginTop: '20px', backgroundColor: '#D5F5E3'}}>
             <h3>Saved Groups</h3>
                 <List
                     dataSource={savedGroups}
+                    locale={{ emptyText: ' ' }}
                     renderItem={(item, index) => (
                         <List.Item
                             actions={[

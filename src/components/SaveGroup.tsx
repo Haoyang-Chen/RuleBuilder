@@ -10,11 +10,6 @@ const SaveGroup= () => {
         groupName,
         setGroupName}=useAppContext();
 
-    // const handleModalSaveOk = () => {
-    //     setSavedGroups([...savedGroups, { name: groupName, query: JSON.stringify(query) }]);
-    //     setSaveGroupModalVisible(false);
-    //     setGroupName('');
-    // };
 
     const handleModalSaveOk = () => {
         const existingRuleIndex = savedGroups.findIndex(group => group.name === groupName);

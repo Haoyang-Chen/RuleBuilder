@@ -11,7 +11,7 @@ const SaveRule = () => {
         setSaveRuleModalVisible,
         ruleName,
         setRuleName,
-        result
+        ruleResult
     } = useAppContext();
 
     const handleModalSaveOk = () => {
@@ -22,7 +22,7 @@ const SaveRule = () => {
                 content: 'Name already exists, replace with the new one？',
                 onOk() {
                     const newSavedRules = [...savedRules];
-                    newSavedRules[existingRuleIndex] = { name: ruleName, result: result, query: JSON.stringify(query) };
+                    newSavedRules[existingRuleIndex] = { name: ruleName, result: ruleResult, query: JSON.stringify(query) };
                     setSavedRules(newSavedRules);
                     message.success('Rule replaced');
                     setSaveRuleModalVisible(false);
@@ -33,7 +33,7 @@ const SaveRule = () => {
                 }
             });
         } else {
-            setSavedRules([...savedRules, { name: ruleName, result: result, query: JSON.stringify(query) }]);
+            setSavedRules([...savedRules, { name: ruleName, result: ruleResult, query: JSON.stringify(query) }]);
             message.success('Rule Saved');
             setSaveRuleModalVisible(false);
             setRuleName('');

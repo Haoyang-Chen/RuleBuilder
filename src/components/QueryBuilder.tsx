@@ -4,31 +4,146 @@ import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
 import {
     ActionWithRulesAndAddersProps,
     CombinatorSelectorProps,
-    OptionList, ValueEditorProps, ValueSelector, ActionProps, ActionElement, OperatorSelectorProps
+    OptionList,
+    ValueEditorProps,
+    ValueEditor,
+    ActionProps,
+    ActionElement,
+    OperatorSelectorProps,
+    FieldSelectorProps,
+    findPath
 } from 'react-querybuilder';
 import {QueryBuilder} from 'react-querybuilder';
 import {Button, Input} from 'antd';
 import 'react-querybuilder/dist/query-builder.css';
-import {QueryBuilderAntD,AntDValueSelector, AntDActionElement} from '@react-querybuilder/antd';
+import {QueryBuilderAntD,AntDValueSelector, AntDActionElement,AntDValueEditor} from '@react-querybuilder/antd';
 import {useAppContext} from '../AppContent';
 import {ExportButton, ImportButton} from "./ExportImportButtons";
-import {fields} from "./Fields";
 import React, {useState} from "react";
+import {Field} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
 
-type AntDValueEditorProps = ValueEditorProps & { extraProps?: Record<string, any> };
+const operatorSelector = (props: OperatorSelectorProps) => {
+    const options: OptionList = [
+        { name: '=', label: '=' },
+        // { name: '!=', label: '!=' },
+        { name: '>', label: '>' },
+        // { name: '>=', label: '>=' },
+        { name: '<', label: '<' },
+        // { name: '<=', label: '<=' },
+        { name: 'between', label: 'between' },
+    ];
+    return <AntDValueSelector
+        {...props}
+        options={options}
+        value={props.value}
+        handleOnChange={props.handleOnChange}
+    />;
+};
+
+const CombinatorSelector = (props: CombinatorSelectorProps) => {
+    const options: OptionList = [
+        { name: 'And', label: 'AND' },
+        { name: 'Or', label: 'OR' },
+        { name:'Gor2', label:'GOR2'}
+    ];
+
+    return (
+        <AntDValueSelector
+            {...props}
+            options={options}
+            value={props.value}
+            handleOnChange={props.handleOnChange}
+        />
+    );
+};
+
+
+const CustomValueEditor = (props: ValueEditorProps) => {
+    const {
+        query,
+        operationResultName,
+        setOperationResultName,
+        fields,
+        setFields}=useAppContext();
+
+    const { path } = props;
+
+    const rule = findPath(path,query);
+    const [inputValue, setInputValue] = React.useState(() => {
+        const existingName = operationResultName.find(item => item.rule === rule);
+        return existingName ? existingName.name : '';
+    });
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
+
+    const handleInputBlur = () => {
+        const ruleIndex = operationResultName.findIndex(item => item.rule === rule);
+        // console.log(rule)
+        console.log(path)
+        if (ruleIndex !== -1) {
+            const updatedOperationResultName = [...operationResultName];
+            updatedOperationResultName[ruleIndex] = { ...updatedOperationResultName[ruleIndex], name: inputValue };
+            setOperationResultName(updatedOperationResultName);
+        } else {
+            if (rule) {
+                setOperationResultName([...operationResultName, { name: inputValue, rule: rule }]);
+            }
+        }
+    };
+
+    return (
+        <div style={{display:'flex'}}>
+            <div style={{ width: '250px' }}>
+            <AntDValueEditor {...props} />
+            </div>
+            <div style={{ marginLeft: '8px',marginRight: '8px',width: '200px' }}>
+                <Input placeholder="Operation Result Name" value={inputValue} onChange={handleInputChange} onBlur={handleInputBlur} />
+            </div>
+            <Button onClick={() => addToFeature(fields,setFields,inputValue)} style={{backgroundColor: '#FDEBD0'}}>+Feature</Button>
+        </div>
+    );
+}
+
+const addToFeature = (fields: Field[], setFields: React.Dispatch<React.SetStateAction<Field[]>>, name: string) => {
+    if (!name.trim()) {
+        return;
+    }
+
+    if (fields.some(field => field.name === name)) {
+        const replace = window.confirm(`A field with name "${name}" already exists.`);
+        if (!replace) {
+            return;
+        }
+    }
+
+    const newField: Field = { name: name, label: name };
+
+    const updatedFields = fields.filter(field => field.name !== name).concat(newField);
+
+    setFields(updatedFields);
+}
+
+
+const CustomFieldSelector = (props: FieldSelectorProps) => {
+
+    return (
+        <div style={{ width: '250px' }}>
+            <AntDValueSelector {...props} style={{ width: '100%' }}/>
+        </div>
+    );
+};
 
 const CustomQueryBuilder = () => {
     const {
         query,
         setQuery,
-        result,
-        setResult,
+        ruleResult,
+        setRuleResult,
         setSaveGroupModalVisible,
         setSaveRuleModalVisible,
-        operationResultName,
-        setOperationResultName}=useAppContext();
-
-
+        fields,
+        setFields}=useAppContext();
 
     const AddRuleButtons = (props: ActionWithRulesAndAddersProps) => {
         const handleSaveGroup = () => {
@@ -37,7 +152,7 @@ const CustomQueryBuilder = () => {
 
         return(
             <>
-                <Button onClick={handleSaveGroup}>Save Group</Button>
+                <Button onClick={handleSaveGroup} style={{backgroundColor: '#D5F5E3'}}>Save Group</Button>
                 <Button onClick={(e) => props.handleOnClick(e)}>+Rule</Button>
             </>
         );
@@ -49,82 +164,26 @@ const CustomQueryBuilder = () => {
         }
 
         return (
-            <Button onClick={handleSaveRule}>Save Rule</Button>
+            <Button onClick={handleSaveRule} style={{backgroundColor: '#EBF5FB'}}>Save Rule</Button>
         );
     }
 
-    const CombinatorSelector = (props: CombinatorSelectorProps) => {
-        const options: OptionList = [
-            { name: 'And', label: 'AND' },
-            { name: 'Or', label: 'OR' },
-            { name:'Gor2', label:'GOR2'}
-        ];
-
-        return (
-            <AntDValueSelector
-                {...props}
-                options={options}
-                value={props.value}
-                handleOnChange={props.handleOnChange}
-            />
-        );
-    };
-
-    const operatorSelector = (props: OperatorSelectorProps) => {
-        const options: OptionList = [
-            { name: '=', label: '=' },
-            { name: '!=', label: '!=' },
-            { name: '>', label: '>' },
-            { name: '>=', label: '>=' },
-            { name: '<', label: '<' },
-            { name: '<=', label: '<=' },
-        ];
-        return <AntDValueSelector
-            {...props}
-            options={options}
-            value={props.value}
-            handleOnChange={props.handleOnChange}
-        />;
-    };
-
-    const RemoveRuleAction = (props: ActionProps) => {
-        const { path } = props;
-        const rule = query.rules[path[0]];
-        const [inputValue, setInputValue] = React.useState(() => {
-            const existingName = operationResultName.find(item => item.id === rule.id);
-            return existingName ? existingName.name : '';
-        });
-
-        const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            setInputValue(e.target.value);
-        };
-
-        const handleInputBlur = () => {
-            const ruleIndex = operationResultName.findIndex(item => item.id === rule.id);
-            if (ruleIndex !== -1) {
-                const updatedOperationResultName = [...operationResultName];
-                updatedOperationResultName[ruleIndex] = { ...updatedOperationResultName[ruleIndex], name: inputValue };
-                setOperationResultName(updatedOperationResultName);
-            } else {
-                if (rule.id) {
-                    setOperationResultName([...operationResultName, { name: inputValue, id: rule.id }]);
-                }
+    const ClearRuleButton = () => {
+        function handleClearRule() {
+            const confirmClear = window.confirm('Are you sure you want to clear the rule?');
+            if (confirmClear) {
+                setQuery({ combinator: 'AND', rules: [] });
+                setRuleResult('');
             }
-        };
+        }
 
         return (
-            <div style={{display:'flex'}}>
-                <div style={{ marginLeft: '30px',marginRight: '30px',width: '200px' }}>
-                    <Input placeholder="Operation Result Name" value={inputValue} onChange={handleInputChange} onBlur={handleInputBlur} />
-                </div>
-                <AntDActionElement{...props} />
-            </div>
+            <Button onClick={handleClearRule} style={{ backgroundColor: 'red' }}>
+
+                <span style={{color:'white'}}>Clear Rule</span>
+            </Button>
         );
     };
-
-
-
-
 
 
     return (
@@ -136,17 +195,20 @@ const CustomQueryBuilder = () => {
                         <SaveRuleButton />
                         <ExportButton />
                         <ImportButton />
+                        <ClearRuleButton />
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop:'0px', marginBottom: '10px'}}>
-                        <div style={{ whiteSpace: 'nowrap' }}>Rule Result Name:</div>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '0px', marginBottom: '10px' }}>
+                        <div style={{ whiteSpace: 'nowrap', marginRight: '10px' }}>Rule Result Name:</div>
                         <Input
                             placeholder="Rule Result Name"
-                            value={result}
-                            onChange={(e) => setResult(e.target.value)}
-                            style={{ marginBottom: '10px' ,marginTop: '10px', width:'378px'}}
+                            value={ruleResult}
+                            onChange={(e) => setRuleResult(e.target.value)}
+                            style={{ marginBottom: '10px', marginRight: '10px', marginTop: '10px', width: '378px' }}
                         />
+                        <Button onClick={() => addToFeature(fields, setFields, ruleResult)} style={{backgroundColor: '#FDEBD0'}}>+Feature</Button>
                     </div>
-                    <div style={{ marginBottom: '10px' ,marginTop: '10px', width:'900px'}}>
+
+                    <div style={{ marginBottom: '10px' ,marginTop: '10px', width:'1000px'}}>
                         <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
                             <QueryBuilderAntD>
                                 <QueryBuilder
@@ -159,8 +221,9 @@ const CustomQueryBuilder = () => {
                                     controlElements={{
                                         addRuleAction: AddRuleButtons,
                                         combinatorSelector: CombinatorSelector,
-                                        removeRuleAction: RemoveRuleAction,
-                                        operatorSelector: operatorSelector
+                                        fieldSelector: CustomFieldSelector,
+                                        operatorSelector: operatorSelector,
+                                        valueEditor: CustomValueEditor
                                     }}
                                 />
                             </QueryBuilderAntD>

@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import {RuleGroupType} from "react-querybuilder";
+import {RuleGroupType, RuleType} from "react-querybuilder";
+import {Field} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
+import {ECGfields} from "./components/Fields";
 
 interface StateContextType {
     query: RuleGroupType;
@@ -10,8 +12,8 @@ interface StateContextType {
     setSavedGroups: React.Dispatch<React.SetStateAction<{ name: string; query: string }[]>>;
     savedRules: { name: string; result: string; query: string }[];
     setSavedRules: React.Dispatch<React.SetStateAction<{ name: string; result: string, query: string }[]>>;
-    result: string;
-    setResult: React.Dispatch<React.SetStateAction<string>>;
+    ruleResult: string;
+    setRuleResult: React.Dispatch<React.SetStateAction<string>>;
     displayResult: string;
     setDisplayResult: React.Dispatch<React.SetStateAction<string>>;
     saveGroupModalVisible: boolean;
@@ -26,8 +28,10 @@ interface StateContextType {
     setGroupName: React.Dispatch<React.SetStateAction<string>>;
     ruleName: string;
     setRuleName: React.Dispatch<React.SetStateAction<string>>;
-    operationResultName: {name:string,id:string}[];
-    setOperationResultName: React.Dispatch<React.SetStateAction<{name:string,id:string}[]>>;
+    operationResultName: {name:string,rule: any}[];
+    setOperationResultName: React.Dispatch<React.SetStateAction<{name:string,rule: any}[]>>;
+    fields: Field[];
+    setFields: React.Dispatch<React.SetStateAction<Field[]>>;
 }
 
 const StateContext = createContext<StateContextType | undefined>(undefined);
@@ -48,20 +52,20 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
     const [query, setQuery] = useState<RuleGroupType>({
         combinator: 'AND',
         rules: [
-            { field: 'feature place holder', operator: '>', value: 'threshold place holder' },
-            { field: 'feature place holder', operator: '<', value: 'threshold place holder' },
+            { field: 'feature 1', operator: '>', value: 'threshold 1' },
+            { field: 'feature 2', operator: '<', value: 'threshold 2' },
         ],
     });
     const [displayQuery, setDisplayQuery] = useState<RuleGroupType>({
         combinator: 'AND',
         rules: [
-            { field: 'feature place holder', operator: '>', value: 'threshold place holder' },
-            { field: 'feature place holder', operator: '<', value: 'threshold place holder' },
+            { field: 'feature 1', operator: '>', value: 'threshold 1' },
+            { field: 'feature 2', operator: '<', value: 'threshold 2' },
         ],
     });
     const [savedGroups, setSavedGroups] = useState<{ name: string; query: string }[]>([]);
     const [savedRules, setSavedRules] = useState<{ name: string; result:string, query: string }[]>([]);
-    const [result, setResult] = useState<string>('');
+    const [ruleResult, setRuleResult] = useState<string>('');
     const [displayResult, setDisplayResult] = useState<string>('');
     const [saveGroupModalVisible, setSaveGroupModalVisible] = useState<boolean>(false);
     const [saveRuleModalVisible, setSaveRuleModalVisible] = useState<boolean>(false);
@@ -69,7 +73,8 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
     const [checkRuleModalVisible, setCheckRuleModalVisible] = useState<boolean>(false);
     const [groupName, setGroupName] = useState<string>('');
     const [ruleName, setRuleName] = useState<string>('');
-    const [operationResultName, setOperationResultName] = useState<{name:string,id:string}[]>([]);
+    const [operationResultName, setOperationResultName] = useState<{name:string,rule: any}[]>([]);
+    const [fields, setFields] = useState<Field[]>(ECGfields);
 
     return (
         <StateContext.Provider value={{
@@ -81,8 +86,8 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
             setSavedGroups,
             savedRules,
             setSavedRules,
-            result,
-            setResult,
+            ruleResult,
+            setRuleResult,
             displayResult,
             setDisplayResult,
             saveGroupModalVisible,
@@ -98,7 +103,9 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
             ruleName,
             setRuleName,
             operationResultName,
-            setOperationResultName
+            setOperationResultName,
+            fields,
+            setFields,
         }}>
             {children}
         </StateContext.Provider>
