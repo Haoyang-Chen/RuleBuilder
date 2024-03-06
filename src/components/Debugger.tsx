@@ -23,7 +23,6 @@ const Debugger= () => {
                     </div>
                 </div>
             </div>
-
         </>
 
 
