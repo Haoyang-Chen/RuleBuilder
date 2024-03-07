@@ -1,7 +1,8 @@
 import React from 'react';
-import {Button, Input, List, Modal} from 'antd';
-import {QueryBuilder, RuleGroupType} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
+import {Button, Input, List, Modal, Popover, Tooltip} from 'antd';
+import {QueryBuilder} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
 import {useAppContext} from "../AppContent";
+import {CombinatorSelector, CustomValueEditor, operatorSelector} from "./QueryBuilder";
 
 
 const SavedRuleList= () => {
@@ -48,6 +49,22 @@ const SavedRuleList= () => {
         setSavedRules(newSavedQueries);
     };
 
+    const checkRule = (index: number) => {
+        return (
+            <>
+                Result Name: {displayResult}
+                <QueryBuilder
+                fields={fields}
+                query={displayQuery}
+                onQueryChange={(q: any) => setDisplayQuery(q)}
+                controlElements={{
+                    addRuleAction: () => null,
+                    addGroupAction: () => null,
+                }}/>
+            </>
+        )
+    }
+
 
     return (
         <>
@@ -59,8 +76,11 @@ const SavedRuleList= () => {
                     renderItem={(item, index) => (
                         <List.Item
                             actions={[
-                                <Button onClick={() => handleCheck(index)}>Check</Button>,
-                                <Button onClick={() => handleDeleteGroup(index)}>Delete</Button>
+                                <Popover content={checkRule(index)} trigger="hover" placement={"bottom"}>
+                                    <Button onClick={() => handleCheck(index)}>Edit</Button>
+                                </Popover>,
+                                <Button onClick={() => handleLoad()}>Load</Button>,
+                                <Button onClick={() => handleDeleteGroup(index)}>x</Button>
                             ]}
                         >
                             {item.name}
@@ -91,11 +111,14 @@ const SavedRuleList= () => {
                     query={displayQuery}
                     onQueryChange={(q: any) => setDisplayQuery(q)}
                     controlElements={{
-                        addRuleAction: () => null, // Hide add rule button
+                        combinatorSelector: CombinatorSelector,
+                        operatorSelector: operatorSelector
                     }}/>
             </Modal></>
 
     );
 };
+
+
 
 export default SavedRuleList;

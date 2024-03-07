@@ -28,8 +28,8 @@ interface StateContextType {
     setGroupName: React.Dispatch<React.SetStateAction<string>>;
     ruleName: string;
     setRuleName: React.Dispatch<React.SetStateAction<string>>;
-    operationResultName: {name:string,rule: any}[];
-    setOperationResultName: React.Dispatch<React.SetStateAction<{name:string,rule: any}[]>>;
+    operationResultName: {name:string,rule: any, id:string}[];
+    setOperationResultName: React.Dispatch<React.SetStateAction<{name:string,rule: any, id:string}[]>>;
     fields: Field[];
     setFields: React.Dispatch<React.SetStateAction<Field[]>>;
 }
@@ -73,7 +73,7 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
     const [checkRuleModalVisible, setCheckRuleModalVisible] = useState<boolean>(false);
     const [groupName, setGroupName] = useState<string>('');
     const [ruleName, setRuleName] = useState<string>('');
-    const [operationResultName, setOperationResultName] = useState<{name:string,rule: any}[]>([]);
+    const [operationResultName, setOperationResultName] = useState<{name:string,rule: any,id:string}[]>([]);
     const [fields, setFields] = useState<Field[]>(ECGfields);
 
     return (

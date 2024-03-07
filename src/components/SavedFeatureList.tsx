@@ -18,21 +18,22 @@ const SavedFeatureList= () => {
 
     return (
         <>
-            <div style={{ border: '2px solid #ccc', borderRadius: '8px', padding: '10px', marginTop: '20px' ,backgroundColor: '#FDEBD0'}}>
+            <div style={{ border: '2px solid #ccc', borderRadius: '8px', padding: '10px', marginTop: '20px', backgroundColor: '#FDEBD0' }}>
                 <h3>Saved Features</h3>
                 <List
                     dataSource={addedFields}
-                    locale={{ emptyText: ' ' }}
+                    locale={{ emptyText: 'Empty' }}
                     renderItem={(item, index) => (
                         <List.Item
+                            style={{ display: 'flex', alignItems: 'center'}}
                             actions={[
-                                <Button onClick={() => handleDeleteField(index)}>Delete</Button>
+                                <Button onClick={() => handleDeleteField(index)} style={{ margin: '0px' }}>x</Button>
                             ]}
                         >
                             {item.label}
                         </List.Item>
-                    )
-                }/>
+                    )}
+                />
             </div>
         </>
     );

@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {Button, List, Modal} from 'antd';
+import {Button, List, Modal, Popover} from 'antd';
 import {QueryBuilder, RuleGroupType} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
 import {useAppContext} from "../AppContent";
+import {CombinatorSelector, CustomValueEditor, operatorSelector} from "./QueryBuilder";
 
 
 const SavedGroupList= () => {
@@ -52,6 +53,21 @@ const SavedGroupList= () => {
         setSavedGroups(newSavedQueries);
     };
 
+    const checkRule = (index: number) => {
+        return (
+            <>
+                <QueryBuilder
+                    fields={fields}
+                    query={displayQuery}
+                    onQueryChange={(q: any) => setDisplayQuery(q)}
+                    controlElements={{
+                        addRuleAction: () => null,
+                        addGroupAction: () => null,
+                    }}/>
+            </>
+        )
+    }
+
 
     return (
         <>
@@ -63,8 +79,11 @@ const SavedGroupList= () => {
                     renderItem={(item, index) => (
                         <List.Item
                             actions={[
-                                <Button onClick={() => handleCheck(index)}>Check</Button>,
-                                <Button onClick={() => handleDeleteGroup(index)}>Delete</Button>
+                                <Popover content={checkRule(index)} trigger="hover" placement={"bottom"}>
+                                    <Button onClick={() => handleCheck(index)}>Edit</Button>
+                                </Popover>,
+                                <Button onClick={() => handleLoad()}>Insert</Button>,
+                                <Button onClick={() => handleDeleteGroup(index)}>x</Button>
                             ]}
                         >
                             {item.name}
@@ -89,7 +108,8 @@ const SavedGroupList= () => {
                     query={displayQuery}
                     onQueryChange={(q: any) => setDisplayQuery(q)}
                     controlElements={{
-                        addRuleAction: () => null, // Hide add rule button
+                        combinatorSelector: CombinatorSelector,
+                        operatorSelector: operatorSelector
                     }}/>
             </Modal></>
 
