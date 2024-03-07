@@ -1,8 +1,12 @@
 import React from 'react';
-import {Button, Input, List, Modal, Popover, Tooltip} from 'antd';
-import {QueryBuilder} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
+import {Button, Input, List, Modal, Popover} from 'antd';
+import {QueryBuilder} from "react-querybuilder";
 import {useAppContext} from "../AppContent";
-import {CombinatorSelector, CustomValueEditor, operatorSelector} from "./QueryBuilder";
+import {CombinatorSelector, operatorSelector} from "./QueryBuilder";
+import * as ReactDnD from "react-dnd";
+import * as ReactDndHtml5Backend from "react-dnd-html5-backend";
+import {QueryBuilderAntD} from "@react-querybuilder/antd";
+import {QueryBuilderDnD} from "@react-querybuilder/dnd";
 
 
 const SavedRuleList= () => {
@@ -106,14 +110,20 @@ const SavedRuleList= () => {
                     onChange={(e) => setDisplayResult(e.target.value)}
                     style={{ marginBottom: '10px' ,marginTop: '10px'}}
                 />
-                <QueryBuilder
-                    fields={fields}
-                    query={displayQuery}
-                    onQueryChange={(q: any) => setDisplayQuery(q)}
-                    controlElements={{
-                        combinatorSelector: CombinatorSelector,
-                        operatorSelector: operatorSelector
-                    }}/>
+                <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
+                    <QueryBuilderAntD>
+                        <QueryBuilder
+                            fields={fields}
+                            query={displayQuery}
+                            onQueryChange={(q: any) => setDisplayQuery(q)}
+                            controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
+                            controlElements={{
+                                combinatorSelector: CombinatorSelector,
+                                operatorSelector: operatorSelector
+                            }}
+                        />
+                    </QueryBuilderAntD>
+                </QueryBuilderDnD>
             </Modal></>
 
     );

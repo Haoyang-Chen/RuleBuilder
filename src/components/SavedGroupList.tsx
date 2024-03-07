@@ -1,8 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Button, List, Modal, Popover} from 'antd';
-import {QueryBuilder, RuleGroupType} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
+import {QueryBuilder, RuleGroupType} from "react-querybuilder";
 import {useAppContext} from "../AppContent";
-import {CombinatorSelector, CustomValueEditor, operatorSelector} from "./QueryBuilder";
+import {CombinatorSelector, operatorSelector} from "./QueryBuilder";
+import * as ReactDnD from "react-dnd";
+import * as ReactDndHtml5Backend from "react-dnd-html5-backend";
+import {QueryBuilderAntD} from "@react-querybuilder/antd";
+import {QueryBuilderDnD} from "@react-querybuilder/dnd";
 
 
 const SavedGroupList= () => {
@@ -103,14 +107,21 @@ const SavedGroupList= () => {
                     </Button>,
                 ]}
             >
-                <QueryBuilder
-                    fields={fields}
-                    query={displayQuery}
-                    onQueryChange={(q: any) => setDisplayQuery(q)}
-                    controlElements={{
-                        combinatorSelector: CombinatorSelector,
-                        operatorSelector: operatorSelector
-                    }}/>
+                <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
+                    <QueryBuilderAntD>
+                        <QueryBuilder
+                            fields={fields}
+                            query={displayQuery}
+                            onQueryChange={(q: any) => setDisplayQuery(q)}
+                            controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
+                            controlElements={{
+                                combinatorSelector: CombinatorSelector,
+                                operatorSelector: operatorSelector
+                            }}
+                        />
+                    </QueryBuilderAntD>
+                </QueryBuilderDnD>
+
             </Modal></>
 
     );

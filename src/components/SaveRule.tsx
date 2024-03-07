@@ -15,11 +15,15 @@ const SaveRule = () => {
     } = useAppContext();
 
     const handleModalSaveOk = () => {
+        if (!ruleName) {
+            message.error('Rule Name cannot be empty');
+            return;
+        }
+
         const existingRuleIndex = savedRules.findIndex(rule => rule.name === ruleName);
         if (existingRuleIndex !== -1) {
             Modal.confirm({
-                // title: 'Replace Check',
-                content: 'Name already exists, replace with the new one？',
+                content: 'Name already exists, replace with the new one?',
                 onOk() {
                     const newSavedRules = [...savedRules];
                     newSavedRules[existingRuleIndex] = { name: ruleName, result: ruleResult, query: JSON.stringify(query) };

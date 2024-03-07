@@ -6,9 +6,6 @@ import {
     CombinatorSelectorProps,
     OptionList,
     ValueEditorProps,
-    ValueEditor,
-    ActionProps,
-    ActionElement,
     OperatorSelectorProps,
     FieldSelectorProps,
     findPath
@@ -16,10 +13,10 @@ import {
 import {QueryBuilder} from 'react-querybuilder';
 import {Button, Input} from 'antd';
 import 'react-querybuilder/dist/query-builder.css';
-import {QueryBuilderAntD,AntDValueSelector, AntDActionElement,AntDValueEditor} from '@react-querybuilder/antd';
+import {QueryBuilderAntD,AntDValueSelector, AntDValueEditor} from '@react-querybuilder/antd';
 import {useAppContext} from '../AppContent';
 import {ExportButton, ImportButton} from "./ExportImportButtons";
-import React, {useState} from "react";
+import React from "react";
 import {Field} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
 
 export const operatorSelector = (props: OperatorSelectorProps) => {

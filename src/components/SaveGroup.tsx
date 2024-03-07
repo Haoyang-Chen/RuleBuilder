@@ -12,11 +12,15 @@ const SaveGroup= () => {
 
 
     const handleModalSaveOk = () => {
+        if (!groupName) {
+            message.error('Group Name cannot be empty');
+            return;
+        }
+
         const existingRuleIndex = savedGroups.findIndex(group => group.name === groupName);
         if (existingRuleIndex !== -1) {
             Modal.confirm({
-                // title: 'Replace Check',
-                content: 'Name already exists, replace with the new one？',
+                content: 'Name already exists, replace with the new one?',
                 onOk() {
                     const newSavedGroups = [...savedGroups];
                     newSavedGroups[existingRuleIndex] = { name: groupName, query: JSON.stringify(query) };
@@ -36,6 +40,7 @@ const SaveGroup= () => {
             setGroupName('');
         }
     };
+
 
     const handleModalSaveCancel = () => {
         setSaveGroupModalVisible(false);
