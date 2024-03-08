@@ -73,10 +73,10 @@ const SavedRuleList= () => {
     return (
         <>
             <div style={{ border: '2px solid #ccc', borderRadius: '8px', padding: '10px', marginTop: '20px', backgroundColor: '#EBF5FB'}}>
-                <h3>Saved Rules</h3>
+                <h3>Saved Logic</h3>
                 <List
                     dataSource={savedRules}
-                    locale={{ emptyText: ' ' }}
+                    locale={{ emptyText: 'Empty' }}
                     renderItem={(item, index) => (
                         <List.Item
                             actions={[

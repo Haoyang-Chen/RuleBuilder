@@ -15,9 +15,9 @@ import {Button, Input} from 'antd';
 import 'react-querybuilder/dist/query-builder.css';
 import {QueryBuilderAntD,AntDValueSelector, AntDValueEditor} from '@react-querybuilder/antd';
 import {useAppContext} from '../AppContent';
-import {ExportButton, ImportButton} from "./ExportImportButtons";
 import React from "react";
 import {Field} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
+import {CustomValueSelector} from "./CustomValueSelector";
 
 export const operatorSelector = (props: OperatorSelectorProps) => {
     const options: OptionList = [
@@ -28,7 +28,7 @@ export const operatorSelector = (props: OperatorSelectorProps) => {
         { name: '<', label: '<' },
         // { name: '<=', label: '<=' },
         { name: 'between', label: 'between' },
-        { name:'is True',label:'is True'},
+        { name:'is Observed',label:'is Observed'},
     ];
     return <AntDValueSelector
         {...props}
@@ -147,13 +147,13 @@ const addToFeature = (fields: Field[], setFields: React.Dispatch<React.SetStateA
 
 
 const CustomFieldSelector = (props: FieldSelectorProps) => {
-
     return (
         <div style={{ width: '150px' }}>
-            <AntDValueSelector {...props} style={{ width: '100%' }}/>
+            <CustomValueSelector {...props} style={{ width: '100%' }} />
         </div>
     );
 };
+
 
 const CustomQueryBuilder = () => {
     const {
@@ -187,26 +187,9 @@ const CustomQueryBuilder = () => {
         }
 
         return (
-            <Button onClick={handleSaveRule} style={{backgroundColor: '#EBF5FB'}}>Save Rule</Button>
+            <Button onClick={handleSaveRule} style={{backgroundColor: '#EBF5FB'}}>Save Logic</Button>
         );
     }
-
-    const ClearRuleButton = () => {
-        function handleClearRule() {
-            const confirmClear = window.confirm('Are you sure you want to clear the rule?');
-            if (confirmClear) {
-                setQuery({ combinator: 'AND', rules: [] });
-                setRuleResult('');
-            }
-        }
-
-        return (
-            <Button onClick={handleClearRule} style={{ backgroundColor: 'red' }}>
-
-                <span style={{color:'white'}}>Clear Rule</span>
-            </Button>
-        );
-    };
 
     const QueryChangeHandler = (q: any) => {
         //find the changed rule
@@ -244,21 +227,22 @@ const CustomQueryBuilder = () => {
                 <div style={{ border: '2px solid #ccc', borderRadius: '8px', padding: '10px', marginTop: '20px' }}>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop:'0px'}}>
-                        <h3>RuleBuilder</h3>
-                        <SaveRuleButton />
-                        <ExportButton />
-                        <ImportButton />
-                        <ClearRuleButton />
+                        <h3>LogicBuilder</h3>
+
+                        {/*<ExportButton />*/}
+                        {/*<ImportButton />*/}
+                        {/*<ClearRuleButton />*/}
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '0px', marginBottom: '10px' }}>
-                        <div style={{ whiteSpace: 'nowrap', marginRight: '10px' }}>Rule Result Name:</div>
+                        <div style={{ whiteSpace: 'nowrap', marginRight: '10px' }}>Logic Result Name:</div>
                         <Input
-                            placeholder="Rule Result Name"
+                            placeholder="Logic Result Name"
                             value={ruleResult}
                             onChange={(e) => setRuleResult(e.target.value)}
                             style={{ marginBottom: '10px', marginRight: '10px', marginTop: '10px', width: '150px' }}
                         />
-                        <Button onClick={() => addToFeature(fields, setFields, ruleResult)} style={{backgroundColor: '#FDEBD0'}}>+Feature</Button>
+                        <Button onClick={() => addToFeature(fields, setFields, ruleResult)} style={{backgroundColor: '#FDEBD0', marginRight: '10px'}}>+Feature</Button>
+                        <SaveRuleButton />
                     </div>
 
                     <div style={{ marginBottom: '10px' ,marginTop: '10px', width:'750px'}}>

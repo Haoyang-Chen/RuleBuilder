@@ -2,15 +2,15 @@ import {Field} from "react-querybuilder";
 
 export const ECGfields: Field[] = [
     { name: 'sinus', label: 'SINUS' },
-    { name: 'rr_diff', label: 'RR_DIFF' },
-    { name: 'hr', label: 'HR' },
-    { name: 'pr_dur', label: 'PR_DUR' },
-    { name: 'qrs_dur', label: 'QRS_DUR' },
+    { name: 'rr interval', label: 'RR_DIFF' },
+    { name: 'heart rate', label: 'HR' },
+    { name: 'pr duration', label: 'PR_DUR' },
+    { name: 'qrs duration', label: 'QRS_DUR' },
 
-    { name: 'st_amp_i', label: 'ST_AMP_I' },
-    { name: 'st_amp_ii', label: 'ST_AMP_II' },
-    { name: 'st_amp_iii', label: 'ST_AMP_III' },
-    { name: 'st_amp_avr', label: 'ST_AMP_aVR' },
+    { name: 'st amplitude lead I', label: 'ST_AMP_I' },
+    { name: 'st amplitude lead II', label: 'ST_AMP_II' },
+    { name: 'st amplitude lead III', label: 'ST_AMP_III' },
+    { name: 'st amplitude lead aVR', label: 'ST_AMP_aVR' },
     { name: 'st_amp_avl', label: 'ST_AMP_aVL' },
     { name: 'st_amp_avf', label: 'ST_AMP_aVF' },
     { name: 'st_amp_v1', label: 'ST_AMP_V1' },

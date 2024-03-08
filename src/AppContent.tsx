@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import {RuleGroupType, RuleType} from "react-querybuilder";
 import {Field} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
-import {ECGfields} from "./components/Fields";
+// import {ECGfields} from "./components/Fields";
 
 interface StateContextType {
     query: RuleGroupType;
@@ -32,6 +32,8 @@ interface StateContextType {
     setOperationResultName: React.Dispatch<React.SetStateAction<{name:string,rule: any, id:string}[]>>;
     fields: Field[];
     setFields: React.Dispatch<React.SetStateAction<Field[]>>;
+    originField: Field[];
+    setOriginField: React.Dispatch<React.SetStateAction<Field[]>>;
 }
 
 const StateContext = createContext<StateContextType | undefined>(undefined);
@@ -74,7 +76,9 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
     const [groupName, setGroupName] = useState<string>('');
     const [ruleName, setRuleName] = useState<string>('');
     const [operationResultName, setOperationResultName] = useState<{name:string,rule: any,id:string}[]>([]);
-    const [fields, setFields] = useState<Field[]>(ECGfields);
+    const [originField, setOriginField] = useState<Field[]>([]);
+    const [fields, setFields] = useState<Field[]>(originField);
+
 
     return (
         <StateContext.Provider value={{
@@ -104,6 +108,8 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
             setRuleName,
             operationResultName,
             setOperationResultName,
+            originField,
+            setOriginField,
             fields,
             setFields,
         }}>

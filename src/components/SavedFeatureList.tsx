@@ -1,13 +1,12 @@
 import React from 'react';
 import {Button, List} from 'antd';
 import {useAppContext} from "../AppContent";
-import {ECGfields} from "./Fields";
 
 
 const SavedFeatureList= () => {
-    const {fields,setFields}=useAppContext();
-    //the added fields refer to the features that are added apart from the original features = fields-ECGfields
-    const addedFields=fields.filter((field)=>!ECGfields.includes(field));
+    const {fields,setFields,originField}=useAppContext();
+    //the added fields refer to the features that are added apart from the original features = fields-originfield
+    const addedFields=fields.filter((field)=>!originField.includes(field));
 
 
     const handleDeleteField = (index: number) => {
@@ -19,7 +18,7 @@ const SavedFeatureList= () => {
     return (
         <>
             <div style={{ border: '2px solid #ccc', borderRadius: '8px', padding: '10px', marginTop: '20px', backgroundColor: '#FDEBD0' }}>
-                <h3>Saved Features</h3>
+                <h3>Saved Feature</h3>
                 <List
                     dataSource={addedFields}
                     locale={{ emptyText: 'Empty' }}

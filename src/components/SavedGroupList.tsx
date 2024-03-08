@@ -76,10 +76,10 @@ const SavedGroupList= () => {
     return (
         <>
         <div style={{ border: '2px solid #ccc', borderRadius: '8px', padding: '10px', marginTop: '20px', backgroundColor: '#D5F5E3'}}>
-            <h3>Saved Groups</h3>
+            <h3>Saved Group</h3>
                 <List
                     dataSource={savedGroups}
-                    locale={{ emptyText: ' ' }}
+                    locale={{ emptyText: 'Empty' }}
                     renderItem={(item, index) => (
                         <List.Item
                             actions={[
@@ -102,8 +102,8 @@ const SavedGroupList= () => {
                     <Button key="cancel" onClick={handleModalCheckCancel}>
                         Cancel
                     </Button>,
-                    <Button key="load" type="primary" onClick={handleModalCheckOk}>
-                        Load
+                    <Button key="Insert" type="primary" onClick={handleModalCheckOk}>
+                        Insert
                     </Button>,
                 ]}
             >

@@ -1,7 +1,6 @@
 import React from 'react';
 import {useAppContext} from "../AppContent";
 import {formatQuery} from "react-querybuilder";
-import {findPath} from "react-querybuilder";
 
 const Debugger= () => {
     const {query, ruleResult,operationResultName}=useAppContext();

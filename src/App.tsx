@@ -7,28 +7,45 @@ import CustomQueryBuilder from './components/QueryBuilder';
 import SaveRule from "./components/SaveRule";
 import Debugger from "./components/Debugger";
 import SavedFeatureList from "./components/SavedFeatureList";
+import {ExportButton, ImportButton} from "./components/ExportImportButtons";
+import ClearRuleButton from "./components/ClearRuleButton";
+import {FeatureReader} from "./components/FeatureReader";
 
 const App: React.FC = () => {
     return (
         <StateProvider>
-            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '50px' }}>
-                <div style={{ marginRight: '20px' }}>
-                    <SavedFeatureList />
+            <div style={{position: 'relative'}}>
+                <div style={{display: 'flex', justifyContent: 'center', paddingTop: '50px'}}>
+                    <div style={{marginRight: '20px'}}>
+                        <SavedFeatureList/>
+                    </div>
+                    <div style={{marginRight: '20px'}}>
+                        <SavedRuleList/>
+                    </div>
+                    <div style={{marginRight: '20px'}}>
+                        <SavedGroupList/>
+                    </div>
+                    <div style={{marginRight: '20px'}}>
+                        <CustomQueryBuilder/>
+                    </div>
                 </div>
-                <div style={{ marginRight: '20px' }}>
-                    <SavedRuleList />
+                <div style={{display: 'flex', position: 'absolute', top: '20px', right: '200px'}}>
+                    <div style={{marginRight: '20px'}}>
+                        <FeatureReader/>
+                    </div>
+                    <div style={{marginRight: '20px'}}>
+                        <ExportButton/>
+                    </div>
+                    <div style={{marginRight: '20px'}}>
+                        <ImportButton/>
+                    </div>
+                    <div style={{marginRight: '20px'}}>
+                        <ClearRuleButton/>
+                    </div>
                 </div>
-                <div style={{ marginRight: '20px' }}>
-                    <SavedGroupList />
-                </div>
-                <div style={{ marginRight: '20px' }}>
-                    <CustomQueryBuilder />
-                </div>
-                <SaveGroup />
-                <SaveRule />
             </div>
-            <Debugger />
-            <div style={{height:'40px'}}></div>
+            <SaveGroup/>
+            <SaveRule/>
         </StateProvider>
     );
 };
