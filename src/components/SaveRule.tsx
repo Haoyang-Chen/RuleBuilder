@@ -16,7 +16,7 @@ const SaveRule = () => {
 
     const handleModalSaveOk = () => {
         if (!ruleName) {
-            message.error('Rule Name cannot be empty');
+            message.error('Logic Name cannot be empty');
             return;
         }
 
@@ -28,7 +28,7 @@ const SaveRule = () => {
                     const newSavedRules = [...savedRules];
                     newSavedRules[existingRuleIndex] = { name: ruleName, result: ruleResult, query: JSON.stringify(query) };
                     setSavedRules(newSavedRules);
-                    message.success('Rule replaced');
+                    message.success('Logic replaced');
                     setSaveRuleModalVisible(false);
                     setRuleName('');
                 },
@@ -38,7 +38,7 @@ const SaveRule = () => {
             });
         } else {
             setSavedRules([...savedRules, { name: ruleName, result: ruleResult, query: JSON.stringify(query) }]);
-            message.success('Rule Saved');
+            message.success('Logic Saved');
             setSaveRuleModalVisible(false);
             setRuleName('');
         }
@@ -51,13 +51,13 @@ const SaveRule = () => {
 
     return (
         <Modal
-            title="Save Rule"
+            title="Save Logic"
             visible={saveRuleModalVisible}
             onOk={handleModalSaveOk}
             onCancel={handleModalSaveCancel}
         >
             <Input
-                placeholder="Rule Name"
+                placeholder="Logic Name"
                 value={ruleName}
                 onChange={(e) => setRuleName(e.target.value)}
             />

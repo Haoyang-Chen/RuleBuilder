@@ -25,7 +25,7 @@ const SaveGroup= () => {
                     const newSavedGroups = [...savedGroups];
                     newSavedGroups[existingRuleIndex] = { name: groupName, query: JSON.stringify(query) };
                     setSavedGroups(newSavedGroups);
-                    message.success('Rule replaced');
+                    message.success('Group replaced');
                     setSaveGroupModalVisible(false);
                     setGroupName('');
                 },
@@ -35,7 +35,7 @@ const SaveGroup= () => {
             });
         } else {
             setSavedGroups([...savedGroups, { name: groupName, query: JSON.stringify(query) }]);
-            message.success('Rule Saved');
+            message.success('Group Saved');
             setSaveGroupModalVisible(false);
             setGroupName('');
         }
