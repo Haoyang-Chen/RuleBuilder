@@ -43,6 +43,7 @@ const App: React.FC = () => {
                         <ClearRuleButton/>
                     </div>
                 </div>
+                <Debugger/>
             </div>
             <SaveGroup/>
             <SaveRule/>

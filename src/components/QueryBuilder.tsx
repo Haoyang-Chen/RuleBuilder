@@ -40,8 +40,8 @@ export const operatorSelector = (props: OperatorSelectorProps) => {
 
 export const CombinatorSelector = (props: CombinatorSelectorProps) => {
     const options: OptionList = [
-        { name: 'And', label: 'AND' },
-        { name: 'Or', label: 'OR' },
+        { name: 'And', label: 'and' },
+        { name: 'Or', label: 'or' },
         { name:'Gor2', label:'GOR2'}
     ];
 
