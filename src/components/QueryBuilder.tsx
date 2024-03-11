@@ -86,7 +86,7 @@ export const CustomValueEditor = (props: ValueEditorProps) => {
                 updatedOperationResultName.push({
                     name: value,
                     rule,
-                    id: rule.id || '' // 将 undefined 转换为空字符串
+                    id: rule.id || ''
                 });
             }
             setOperationResultName(updatedOperationResultName);
@@ -95,7 +95,7 @@ export const CustomValueEditor = (props: ValueEditorProps) => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
-        if (operator === 'is True' &&rule) {
+        if (operator === 'is Observed' &&rule) {
             const ruleIndex = operationResultName.findIndex(item => item.id === rule.id);
             if (ruleIndex !== -1) {
                 const updatedOperationResultName = [...operationResultName];
@@ -107,7 +107,7 @@ export const CustomValueEditor = (props: ValueEditorProps) => {
         }
     };
 
-    if (operator === 'is True') {
+    if (operator === 'is Observed') {
         return null;
     }
 
