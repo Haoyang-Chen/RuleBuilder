@@ -94,6 +94,8 @@ export const CustomValueEditor = (props: ValueEditorProps) => {
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log('rule', rule);
+        console.log('path', path);
         setInputValue(e.target.value);
         if (operator === 'is Observed' &&rule) {
             const ruleIndex = operationResultName.findIndex(item => item.id === rule.id);
@@ -206,7 +208,7 @@ const CustomQueryBuilder = () => {
                     if (item.id === id) {
                         moduleIndex = mIndex;
                         logicIndex = lIndex;
-                        newModules[moduleIndex].logics[logicIndex].logicQuery = JSON.stringify(query);
+                        newModules[moduleIndex].logics[logicIndex].logicQuery = query;
                         newModules[moduleIndex].logics[logicIndex].logicName = ruleResult;
                     }
                 });

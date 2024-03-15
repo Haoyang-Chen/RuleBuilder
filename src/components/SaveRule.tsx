@@ -50,7 +50,7 @@ const SaveRule = () => {
             module.logics.forEach((item)=>{
                 if(item.id===id){
                     item.logicName=ruleName;
-                    item.logicQuery=JSON.stringify(query);
+                    item.logicQuery=query;
                 }
             });
         });

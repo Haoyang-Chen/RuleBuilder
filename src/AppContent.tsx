@@ -34,10 +34,10 @@ interface StateContextType {
     setFields: React.Dispatch<React.SetStateAction<Field[]>>;
     originField: Field[];
     setOriginField: React.Dispatch<React.SetStateAction<Field[]>>;
-    modules:{name: string ,logics:{id:string, logicName:string, logicQuery:string}[]}[];
-    setModules: React.Dispatch<React.SetStateAction<{name: string ,logics:{id:string, logicName:string, logicQuery:string}[]}[]>>;
-    logic:{id:string, logicName:string, logicQuery:string};
-    setLogic: React.Dispatch<React.SetStateAction<{id:string, logicName:string, logicQuery:string}>>;
+    modules:{name: string ,logics:{id:string, logicName:string, logicQuery:RuleGroupType}[]}[];
+    setModules: React.Dispatch<React.SetStateAction<{name: string ,logics:{id:string, logicName:string, logicQuery:RuleGroupType}[]}[]>>;
+    logic:{id:string, logicName:string, logicQuery:RuleGroupType};
+    setLogic: React.Dispatch<React.SetStateAction<{id:string, logicName:string, logicQuery:RuleGroupType}>>;
     activePanels: string|string[];
     setActivePanels: React.Dispatch<React.SetStateAction<string|string[]>>;
 }
@@ -84,8 +84,8 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
     const [operationResultName, setOperationResultName] = useState<{name:string,rule: any,id:string}[]>([]);
     const [originField, setOriginField] = useState<Field[]>([]);
     const [fields, setFields] = useState<Field[]>(originField);
-    const [modules, setModules] = useState<{name: string ,logics:{id:string, logicName:string, logicQuery:string}[]}[]>([]);
-    const [logic, setLogic] = useState<{id:string, logicName:string, logicQuery:string}>({id:'', logicName:'', logicQuery:''});
+    const [modules, setModules] = useState<{name: string ,logics:{id:string, logicName:string, logicQuery:RuleGroupType}[]}[]>([]);
+    const [logic, setLogic] = useState<{id:string, logicName:string, logicQuery:RuleGroupType}>({id:'', logicName:'', logicQuery:{combinator: 'and', rules: []}});
     const [activePanels, setActivePanels] = useState<string|string[]>([]);
 
 

@@ -43,7 +43,7 @@ const SavedRuleList= () => {
         console.log(idx);
         console.log(modules[module_index].logics[idx]);
         const savedQuery = modules[module_index].logics[idx];
-        const parsedQuery = JSON.parse(savedQuery.logicQuery);
+        const parsedQuery = savedQuery.logicQuery;
         setDisplayQuery(parsedQuery);
         setDisplayResult(savedQuery.logicName);
         setCheckRuleModalVisible(true);
@@ -53,7 +53,7 @@ const SavedRuleList= () => {
 
     const handleDirectLoad = (module_index: number,idx:number) => {
         setLogic(modules[module_index].logics[idx]);
-        setQuery(JSON.parse(modules[module_index].logics[idx].logicQuery));
+        setQuery(modules[module_index].logics[idx].logicQuery);
         setRuleResult(modules[module_index].logics[idx].logicName);
     };
 
@@ -88,13 +88,7 @@ const SavedRuleList= () => {
         if(logicName){
             setModules(modules.map((module, module_index) => {
                 if (module_index === index) {
-                    module.logics.push({id: uuidv4(),logicName:logicName,logicQuery:JSON.stringify({
-                            combinator: 'and',
-                            rules: [
-                                { field: 'feature 1', operator: '>', value: 'threshold 1' },
-                                { field: 'feature 2', operator: '<', value: 'threshold 2' },
-                            ],
-                        })});
+                    module.logics.push({id: uuidv4(),logicName:logicName,logicQuery:{combinator: 'and', rules: []}});
                 }
                 return module;
             }));
@@ -217,7 +211,7 @@ const EditRuleModal = ({ module_index,index }: { module_index: number,index:numb
     } = useAppContext();
 
     const handleLoad = () => {
-        const newLogic={id:modules[module_index].logics[index].id, logicName:displayResult, logicQuery:JSON.stringify(displayQuery)};
+        const newLogic={id:modules[module_index].logics[index].id, logicName:displayResult, logicQuery:displayQuery};
         const newModules=modules.map((module)=>{
             if(module.name===modules[module_index].name){
                 return {...module, logics:module.logics.map((item)=>{
@@ -290,7 +284,7 @@ const EditRuleModal = ({ module_index,index }: { module_index: number,index:numb
 const CheckRuleContent = ({ module_index,index }: { module_index: number,index:number }) => {
     const { modules, fields,setDisplayQuery } = useAppContext();
     const savedRule = modules[module_index].logics[index];
-    const parsedRule = JSON.parse(savedRule.logicQuery);
+    const parsedRule = savedRule.logicQuery;
 
     return (
         <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
