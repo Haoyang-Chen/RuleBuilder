@@ -17,10 +17,10 @@ const App: React.FC = () => {
             <div style={{position: 'relative'}}>
                 <div style={{display: 'flex', justifyContent: 'center', paddingTop: '50px'}}>
                     <div style={{marginRight: '20px'}}>
-                        <SavedFeatureList/>
+                        <SavedRuleList/>
                     </div>
                     <div style={{marginRight: '20px'}}>
-                        <SavedRuleList/>
+                        <SavedFeatureList/>
                     </div>
                     <div style={{marginRight: '20px'}}>
                         <SavedGroupList/>
@@ -30,7 +30,7 @@ const App: React.FC = () => {
                     </div>
                 </div>
                 <div style={{display: 'flex', position: 'absolute', top: '20px', right: '200px'}}>
-                    <div style={{marginRight: '20px'}}>
+                <div style={{marginRight: '20px'}}>
                         <FeatureReader/>
                     </div>
                     <div style={{marginRight: '20px'}}>
@@ -46,7 +46,7 @@ const App: React.FC = () => {
                 <Debugger/>
             </div>
             <SaveGroup/>
-            <SaveRule/>
+            {/*<SaveRule/>*/}
         </StateProvider>
     );
 };

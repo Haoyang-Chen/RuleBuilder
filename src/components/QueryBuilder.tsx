@@ -11,7 +11,7 @@ import {
     findPath
 } from 'react-querybuilder';
 import {QueryBuilder} from 'react-querybuilder';
-import {Button, Input} from 'antd';
+import {Button, Input, message} from 'antd';
 import 'react-querybuilder/dist/query-builder.css';
 import {QueryBuilderAntD,AntDValueSelector, AntDValueEditor} from '@react-querybuilder/antd';
 import {useAppContext} from '../AppContent';
@@ -103,7 +103,7 @@ export const CustomValueEditor = (props: ValueEditorProps) => {
                 setOperationResultName(updatedOperationResultName);
             }
         } else {
-            updateOperationResultName(e.target.value); // 更新 operationResultName
+            updateOperationResultName(e.target.value);
         }
     };
 
@@ -126,24 +126,33 @@ export const CustomValueEditor = (props: ValueEditorProps) => {
 
 
 
-const addToFeature = (fields: Field[], setFields: React.Dispatch<React.SetStateAction<Field[]>>, name: string) => {
-    if (!name.trim()) {
+const addToFeature = (fields: Field[], setFields: React.Dispatch<React.SetStateAction<Field[]>>,label:string) => {
+    if (!label.trim()) {
+        window.alert('Feature name cannot be empty');
         return;
     }
 
-    if (fields.some(field => field.name === name)) {
-        const replace = window.confirm(`A field with name "${name}" already exists.`);
+    const name = window.prompt("Enter feature description:");
+
+    if (!name || !name.trim()) {
+        window.alert('Feature description cannot be empty');
+        return;
+    }
+
+    if (fields.some(field => field.label === label)) {
+        const replace = window.confirm(`A field with name "${label}" already exists. Do you want to replace it?`);
         if (!replace) {
             return;
         }
     }
 
-    const newField: Field = { name: name, label: name };
+    const newField: Field = { name: name, label: label };
 
     const updatedFields = fields.filter(field => field.name !== name).concat(newField);
 
     setFields(updatedFields);
-}
+};
+
 
 
 const CustomFieldSelector = (props: FieldSelectorProps) => {
@@ -166,7 +175,11 @@ const CustomQueryBuilder = () => {
         fields,
         setFields,
         operationResultName,
-        setOperationResultName}=useAppContext();
+        setOperationResultName,
+        logic,
+        modules,
+        setModules,
+        }=useAppContext();
 
     const AddRuleButtons = (props: ActionWithRulesAndAddersProps) => {
         const handleSaveGroup = () => {
@@ -183,7 +196,29 @@ const CustomQueryBuilder = () => {
 
     const SaveRuleButton = () => {
         function handleSaveRule() {
-            setSaveRuleModalVisible(true);
+            const id = logic.id;
+            let newModules = [...modules];
+            let moduleIndex = null;
+            let logicIndex = null;
+
+            newModules.forEach((module, mIndex) => {
+                module.logics.forEach((item, lIndex) => {
+                    if (item.id === id) {
+                        moduleIndex = mIndex;
+                        logicIndex = lIndex;
+                        newModules[moduleIndex].logics[logicIndex].logicQuery = JSON.stringify(query);
+                        newModules[moduleIndex].logics[logicIndex].logicName = ruleResult;
+                    }
+                });
+            });
+
+            if (moduleIndex !== null && logicIndex !== null) {
+                setModules(newModules);
+                message.success('Logic Saved');
+            } else {
+                console.error('Logic not found');
+            }
+            setSaveRuleModalVisible(false);
         }
 
         return (
@@ -228,10 +263,6 @@ const CustomQueryBuilder = () => {
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop:'0px'}}>
                         <h3>LogicBuilder</h3>
-
-                        {/*<ExportButton />*/}
-                        {/*<ImportButton />*/}
-                        {/*<ClearRuleButton />*/}
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '0px', marginBottom: '10px' }}>
                         <div style={{ whiteSpace: 'nowrap', marginRight: '10px' }}>Logic Result Name:</div>

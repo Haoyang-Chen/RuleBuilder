@@ -42,6 +42,22 @@ const SavedGroupList= () => {
         setQuery(newQuery);
     };
 
+    const handleDirectLoad = (index:number) => {
+        const savedQuery = savedGroups[index];
+        const parsedQuery = JSON.parse(savedQuery.query);
+
+        const newGroup: RuleGroupType = {
+            combinator: 'and',
+            rules: parsedQuery.rules,
+        };
+
+        const newQuery: RuleGroupType = {
+            combinator: 'and',
+            rules: [...query.rules, newGroup],
+        };
+        setQuery(newQuery);
+    };
+
     const handleModalCheckOk = () => {
         setCheckGroupModalVisible(false);
         handleLoad();
@@ -57,21 +73,6 @@ const SavedGroupList= () => {
         setSavedGroups(newSavedQueries);
     };
 
-    const checkRule = (index: number) => {
-        return (
-            <>
-                <QueryBuilder
-                    fields={fields}
-                    query={displayQuery}
-                    onQueryChange={(q: any) => setDisplayQuery(q)}
-                    controlElements={{
-                        addRuleAction: () => null,
-                        addGroupAction: () => null,
-                    }}/>
-            </>
-        )
-    }
-
 
     return (
         <>
@@ -83,10 +84,10 @@ const SavedGroupList= () => {
                     renderItem={(item, index) => (
                         <List.Item
                             actions={[
-                                <Popover content={checkRule(index)} trigger="hover" placement={"bottom"}>
+                                <Popover content={<CheckRuleContent index={index} />} trigger="hover" placement={"bottom"}>
                                     <Button onClick={() => handleCheck(index)}>Edit</Button>
                                 </Popover>,
-                                <Button onClick={() => handleLoad()}>Insert</Button>,
+                                <Button onClick={() => handleDirectLoad(index)}>Insert</Button>,
                                 <Button onClick={() => handleDeleteGroup(index)}>x</Button>
                             ]}
                         >
@@ -124,6 +125,31 @@ const SavedGroupList= () => {
 
             </Modal></>
 
+    );
+};
+
+const CheckRuleContent = ({ index }: { index: number }) => {
+    const { savedGroups, fields,setDisplayQuery } = useAppContext();
+    const savedQuery = savedGroups[index];
+    const parsedQuery = JSON.parse(savedQuery.query);
+
+    return (
+        <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
+            <QueryBuilderAntD>
+                <QueryBuilder
+                    fields={fields}
+                    query={parsedQuery}
+                    onQueryChange={(q: any) => setDisplayQuery(q)}
+                    controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
+                    controlElements={{
+                        combinatorSelector: CombinatorSelector,
+                        operatorSelector: operatorSelector,
+                        addRuleAction: () => null,
+                        addGroupAction: () => null,
+                    }}
+                />
+            </QueryBuilderAntD>
+        </QueryBuilderDnD>
     );
 };
 

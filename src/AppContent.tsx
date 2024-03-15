@@ -34,6 +34,12 @@ interface StateContextType {
     setFields: React.Dispatch<React.SetStateAction<Field[]>>;
     originField: Field[];
     setOriginField: React.Dispatch<React.SetStateAction<Field[]>>;
+    modules:{name: string ,logics:{id:string, logicName:string, logicQuery:string}[]}[];
+    setModules: React.Dispatch<React.SetStateAction<{name: string ,logics:{id:string, logicName:string, logicQuery:string}[]}[]>>;
+    logic:{id:string, logicName:string, logicQuery:string};
+    setLogic: React.Dispatch<React.SetStateAction<{id:string, logicName:string, logicQuery:string}>>;
+    activePanels: string|string[];
+    setActivePanels: React.Dispatch<React.SetStateAction<string|string[]>>;
 }
 
 const StateContext = createContext<StateContextType | undefined>(undefined);
@@ -78,6 +84,10 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
     const [operationResultName, setOperationResultName] = useState<{name:string,rule: any,id:string}[]>([]);
     const [originField, setOriginField] = useState<Field[]>([]);
     const [fields, setFields] = useState<Field[]>(originField);
+    const [modules, setModules] = useState<{name: string ,logics:{id:string, logicName:string, logicQuery:string}[]}[]>([]);
+    const [logic, setLogic] = useState<{id:string, logicName:string, logicQuery:string}>({id:'', logicName:'', logicQuery:''});
+    const [activePanels, setActivePanels] = useState<string|string[]>([]);
+
 
 
     return (
@@ -112,6 +122,12 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
             setOriginField,
             fields,
             setFields,
+            modules,
+            setModules,
+            logic,
+            setLogic,
+            activePanels,
+            setActivePanels
         }}>
             {children}
         </StateContext.Provider>

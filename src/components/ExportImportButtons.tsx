@@ -1,39 +1,38 @@
-import React, {ChangeEvent} from 'react';
+import React from 'react';
+import { Button } from 'antd';
 import { useAppContext } from '../AppContent';
-import {Button, Input} from 'antd';
 
 export const ExportButton = () => {
-    const {query,
-        savedGroups,
-        savedRules,
-        operationResultName,
-        ruleResult,
-        fields}=useAppContext()
-    const exportState = () => {
-        const state={query,savedGroups, savedRules, operationResultName,ruleResult,fields};
+    const { query, savedGroups, savedRules, operationResultName, ruleResult, fields } = useAppContext();
+
+    const exportState = async () => {
+        const state = { query, savedGroups, savedRules, operationResultName, ruleResult, fields };
         const data = JSON.stringify(state);
+
+        // Create a Blob from the JSON data
         const blob = new Blob([data], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
+
+        // Create a temporary anchor element
         const a = document.createElement('a');
-        a.href = url;
+
+        // Set the download attribute and href
         a.download = 'state.json';
-        document.body.appendChild(a);
+        a.href = URL.createObjectURL(blob);
+
+        // Click the anchor to trigger the download
         a.click();
-        document.body.removeChild(a);
+
+        // Cleanup
+        URL.revokeObjectURL(a.href);
     };
+
     return (
-            <Button onClick={exportState}>Export</Button>
+        <Button onClick={exportState}>Export</Button>
     );
 };
 
 export const ImportButton = () => {
-    const {
-        setQuery,
-        setSavedGroups,
-        setSavedRules,
-        setOperationResultName,
-        setRuleResult,
-        setFields}=useAppContext()
+    const { setQuery, setSavedGroups, setSavedRules, setOperationResultName, setRuleResult, setFields } = useAppContext();
 
     const importState = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -67,9 +66,9 @@ export const ImportButton = () => {
     };
 
     return (
-            <label className="custom-file-upload">
-                <input id={'fileInput'} type="file" onChange={importState} accept=".json" style={{ display: 'none' }} />
-                <Button className="custom-button" onClick={handleClick}>Import</Button>
-            </label>
+        <label className="custom-file-upload">
+            <input id={'fileInput'} type="file" onChange={importState} accept=".json" style={{ display: 'none' }} />
+            <Button className="custom-button" onClick={handleClick}>Import</Button>
+        </label>
     );
 };

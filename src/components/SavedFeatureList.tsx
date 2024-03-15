@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, List} from 'antd';
+import {Button, List, Tooltip} from 'antd';
 import {useAppContext} from "../AppContent";
 
 
@@ -29,7 +29,9 @@ const SavedFeatureList= () => {
                                 <Button onClick={() => handleDeleteField(index)} style={{ margin: '0px' }}>x</Button>
                             ]}
                         >
-                            {item.label}
+                            <Tooltip title={item.name} placement={"left"}>
+                                {item.label}
+                            </Tooltip>
                         </List.Item>
                     )}
                 />
