@@ -34,12 +34,14 @@ interface StateContextType {
     setFields: React.Dispatch<React.SetStateAction<Field[]>>;
     originField: Field[];
     setOriginField: React.Dispatch<React.SetStateAction<Field[]>>;
-    modules:{name: string ,logics:{id:string, logicName:string, logicQuery:RuleGroupType}[]}[];
-    setModules: React.Dispatch<React.SetStateAction<{name: string ,logics:{id:string, logicName:string, logicQuery:RuleGroupType}[]}[]>>;
-    logic:{id:string, logicName:string, logicQuery:RuleGroupType};
-    setLogic: React.Dispatch<React.SetStateAction<{id:string, logicName:string, logicQuery:RuleGroupType}>>;
+    modules:{name: string ,logics:{id:string, logicName:string, logicQuery:RuleGroupType, operations:{id:string,left:string,mid:string,right:string,name:string}[]}[]}[];
+    setModules: React.Dispatch<React.SetStateAction<{name: string ,logics:{id:string, logicName:string, logicQuery:RuleGroupType, operations:{id:string,left:string,mid:string,right:string,name:string}[]}[]}[]>>;
+    logic:{id:string, logicName:string, logicQuery:RuleGroupType, operations:{id:string,left:string,mid:string,right:string,name:string}[]};
+    setLogic: React.Dispatch<React.SetStateAction<{id:string, logicName:string, logicQuery:RuleGroupType, operations:{id:string,left:string,mid:string,right:string,name:string}[]}>>;
     activePanels: string|string[];
     setActivePanels: React.Dispatch<React.SetStateAction<string|string[]>>;
+    isQueryBuilderVisible: boolean;
+    setIsQueryBuilderVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const StateContext = createContext<StateContextType | undefined>(undefined);
@@ -84,9 +86,10 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
     const [operationResultName, setOperationResultName] = useState<{name:string,rule: any,id:string}[]>([]);
     const [originField, setOriginField] = useState<Field[]>([]);
     const [fields, setFields] = useState<Field[]>(originField);
-    const [modules, setModules] = useState<{name: string ,logics:{id:string, logicName:string, logicQuery:RuleGroupType}[]}[]>([]);
-    const [logic, setLogic] = useState<{id:string, logicName:string, logicQuery:RuleGroupType}>({id:'', logicName:'', logicQuery:{combinator: 'and', rules: []}});
+    const [modules, setModules] = useState<{name: string ,logics:{id:string, logicName:string, logicQuery:RuleGroupType, operations:{id:string,left:string,mid:string,right:string,name:string}[]}[]}[]>([]);
+    const [logic, setLogic] = useState<{id:string, logicName:string, logicQuery:RuleGroupType, operations:{id:string,left:string,mid:string,right:string,name:string}[]}>({id:'', logicName:'', logicQuery:{combinator: 'and', rules: [],}, operations:[]});
     const [activePanels, setActivePanels] = useState<string|string[]>([]);
+    const [isQueryBuilderVisible, setIsQueryBuilderVisible] = useState(false);
 
 
 
@@ -127,7 +130,9 @@ export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
             logic,
             setLogic,
             activePanels,
-            setActivePanels
+            setActivePanels,
+            isQueryBuilderVisible,
+            setIsQueryBuilderVisible,
         }}>
             {children}
         </StateContext.Provider>

@@ -1,5 +1,5 @@
-import React from 'react';
-import { StateProvider } from './AppContent';
+import React, {useState} from 'react';
+import {StateProvider, useAppContext} from './AppContent';
 import SavedGroupList from './components/SavedGroupList';
 import SavedRuleList from "./components/SavedRuleList";
 import SaveGroup from './components/SaveGroup';
@@ -10,6 +10,7 @@ import SavedFeatureList from "./components/SavedFeatureList";
 import {ExportButton, ImportButton} from "./components/ExportImportButtons";
 import ClearRuleButton from "./components/ClearRuleButton";
 import {FeatureReader} from "./components/FeatureReader";
+import ClipBoard from "./components/ClipBoard";
 
 const App: React.FC = () => {
     return (
@@ -19,14 +20,19 @@ const App: React.FC = () => {
                     <div style={{marginRight: '20px'}}>
                         <SavedRuleList/>
                     </div>
-                    <div style={{marginRight: '20px'}}>
-                        <SavedFeatureList/>
-                    </div>
-                    <div style={{marginRight: '20px'}}>
-                        <SavedGroupList/>
-                    </div>
+                    {/*<div style={{marginRight: '20px'}}>*/}
+                    {/*    <SavedFeatureList/>*/}
+                    {/*</div>*/}
+                    {/*<div style={{marginRight: '20px'}}>*/}
+                    {/*    <SavedGroupList/>*/}
+                    {/*</div>*/}
+
                     <div style={{marginRight: '20px'}}>
                         <CustomQueryBuilder/>
+                    </div>
+
+                    <div style={{marginRight: '20px'}}>
+                        <ClipBoard/>
                     </div>
                 </div>
                 <div style={{display: 'flex', position: 'absolute', top: '20px', right: '200px'}}>

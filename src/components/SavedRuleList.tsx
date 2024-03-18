@@ -1,4 +1,4 @@
-import React ,{useState,useEffect}from 'react';
+import React ,{useEffect}from 'react';
 import {Button, Input, List, Modal, Popover, Collapse, message} from 'antd';
 import {QueryBuilder} from "react-querybuilder";
 import {useAppContext} from "../AppContent";
@@ -8,12 +8,12 @@ import * as ReactDndHtml5Backend from "react-dnd-html5-backend";
 import {QueryBuilderAntD} from "@react-querybuilder/antd";
 import {QueryBuilderDnD} from "@react-querybuilder/dnd";
 import { v4 as uuidv4 } from 'uuid';
+import {Field} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
 
 
 const { Panel } = Collapse;
 
 const SavedRuleList= () => {
-    const [forceRender, setForceRender] = useState<number>(0);
     const {
         setQuery,
         displayQuery,
@@ -26,28 +26,27 @@ const SavedRuleList= () => {
         displayResult,
         setDisplayResult,
         fields,
+        setFields,
         modules,
         setModules,
         logic,
         setLogic,
         activePanels,
-        setActivePanels}=useAppContext();
+        setActivePanels,
+        setIsQueryBuilderVisible,
+    }=useAppContext();
 
-    useEffect(()=>{
-        console.log('modules',modules);
-        setForceRender(prev => prev + 1);
-    },[modules]);
 
-    const handleCheck = (module_index: number,idx:number) => {
-        console.log(module_index);
-        console.log(idx);
-        console.log(modules[module_index].logics[idx]);
-        const savedQuery = modules[module_index].logics[idx];
-        const parsedQuery = savedQuery.logicQuery;
-        setDisplayQuery(parsedQuery);
-        setDisplayResult(savedQuery.logicName);
-        setCheckRuleModalVisible(true);
-    };
+    // const handleCheck = (module_index: number,idx:number) => {
+    //     console.log(module_index);
+    //     console.log(idx);
+    //     console.log(modules[module_index].logics[idx]);
+    //     const savedQuery = modules[module_index].logics[idx];
+    //     const parsedQuery = savedQuery.logicQuery;
+    //     setDisplayQuery(parsedQuery);
+    //     setDisplayResult(savedQuery.logicName);
+    //     setCheckRuleModalVisible(true);
+    // };
 
 
 
@@ -84,11 +83,23 @@ const SavedRuleList= () => {
     };
 
     const handleAddLogic = (index:number) => {
-        const logicName=window.prompt("Please enter logic name");
+        const logicName=window.prompt("Enter Logic Target name");
+        if (!logicName || !logicName.trim()) {
+            window.alert('Name cannot be empty');
+            return -1;
+        }
+        const name = window.prompt("Enter Description:");
+        if (!name || !name.trim()) {
+            window.alert('Description cannot be empty');
+            return -1;
+        }
+        const logicID=uuidv4();
         if(logicName){
+            const newField={id:logicID,name:name,label:logicName};
+            setFields([...fields,newField])
             setModules(modules.map((module, module_index) => {
                 if (module_index === index) {
-                    module.logics.push({id: uuidv4(),logicName:logicName,logicQuery:{combinator: 'and', rules: []}});
+                    module.logics.push({id: logicID,logicName:logicName,logicQuery:{combinator: 'and', rules: []},operations:[]});
                 }
                 return module;
             }));
@@ -102,6 +113,7 @@ const SavedRuleList= () => {
                 }
                 return prevActivePanels;
             });
+            setIsQueryBuilderVisible(true);
         }
     }
 
@@ -171,12 +183,12 @@ const SavedRuleList= () => {
                                                          trigger="hover"
                                                          placement={"bottom"}>
                                                     <Button onClick={() => handleDirectLoad(module_index, idx)}
-                                                            style={{marginRight: '5px'}}>Load</Button>
+                                                            style={{marginRight: '5px'}}>Edit</Button>
                                                 </Popover>
                                                 <Button onClick={() => handleDeleteGroup(module_index, idx)}
                                                         type={"primary"}>x</Button>
                                             </div>
-                                            <EditRuleModal module_index={module_index} index={idx}/>
+                                            {/*<EditRuleModal module_index={module_index} index={idx}/>*/}
                                         </div>
                                         <div style={{height: '5px'}}/>
                                     </>
@@ -194,92 +206,92 @@ const SavedRuleList= () => {
     );
 };
 
-const EditRuleModal = ({ module_index,index }: { module_index: number,index:number }) => {
-    const {
-        setQuery,
-        displayQuery,
-        setDisplayQuery,
-        setRuleResult,
-        displayResult,
-        setDisplayResult,
-        fields,
-        modules,
-        setModules,
-        checkRuleModalVisible,
-        setCheckRuleModalVisible,
-        setLogic
-    } = useAppContext();
-
-    const handleLoad = () => {
-        const newLogic={id:modules[module_index].logics[index].id, logicName:displayResult, logicQuery:displayQuery};
-        const newModules=modules.map((module)=>{
-            if(module.name===modules[module_index].name){
-                return {...module, logics:module.logics.map((item)=>{
-                        if(item.id===modules[module_index].logics[index].id){
-                            return newLogic;
-                        }
-                        return item;
-                    })};
-            }
-            return module;
-        });
-        setModules(newModules);
-
-        setLogic(modules[module_index].logics[index]);
-        setRuleResult(displayResult);
-        setQuery(displayQuery);
-    };
-
-    const handleModalCheckOk = () => {
-        setCheckRuleModalVisible(false);
-        handleLoad();
-    };
-
-    const handleModalCheckCancel = () => {
-        setCheckRuleModalVisible(false);
-    };
-
-    const handleQueryChange = (q: any) => {
-        setDisplayQuery(q);
-    }
-
-    return(
-        <Modal
-            title="Check Rule"
-            visible={checkRuleModalVisible}
-            onCancel={handleModalCheckCancel}
-            footer={[
-                <Button key="cancel" onClick={handleModalCheckCancel}>
-                    Cancel
-                </Button>,
-                <Button key="load" type="primary" onClick={handleModalCheckOk}>
-                    Load
-                </Button>,
-            ]}
-        >
-            <Input
-                placeholder="Result Name"
-                value={displayResult}
-                onChange={(e) => setDisplayResult(e.target.value)}
-                style={{ marginBottom: '10px' ,marginTop: '10px'}}
-            />
-            <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
-                <QueryBuilderAntD>
-                    <QueryBuilder
-                        fields={fields}
-                        query={displayQuery}
-                        onQueryChange={(q: any) => handleQueryChange(q)}
-                        controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
-                        controlElements={{
-                            combinatorSelector: CombinatorSelector,
-                            operatorSelector: operatorSelector
-                        }}
-                    />
-                </QueryBuilderAntD>
-            </QueryBuilderDnD>
-        </Modal>
-    )
-}
+// const EditRuleModal = ({ module_index,index }: { module_index: number,index:number }) => {
+//     const {
+//         setQuery,
+//         displayQuery,
+//         setDisplayQuery,
+//         setRuleResult,
+//         displayResult,
+//         setDisplayResult,
+//         fields,
+//         modules,
+//         setModules,
+//         checkRuleModalVisible,
+//         setCheckRuleModalVisible,
+//         setLogic
+//     } = useAppContext();
+//
+//     const handleLoad = () => {
+//         const newLogic={id:modules[module_index].logics[index].id, logicName:displayResult, logicQuery:displayQuery, operations:modules[module_index].logics[index].operations};
+//         const newModules=modules.map((module)=>{
+//             if(module.name===modules[module_index].name){
+//                 return {...module, logics:module.logics.map((item)=>{
+//                         if(item.id===modules[module_index].logics[index].id){
+//                             return newLogic;
+//                         }
+//                         return item;
+//                     })};
+//             }
+//             return module;
+//         });
+//         setModules(newModules);
+//
+//         setLogic(modules[module_index].logics[index]);
+//         setRuleResult(displayResult);
+//         setQuery(displayQuery);
+//     };
+//
+//     const handleModalCheckOk = () => {
+//         setCheckRuleModalVisible(false);
+//         handleLoad();
+//     };
+//
+//     const handleModalCheckCancel = () => {
+//         setCheckRuleModalVisible(false);
+//     };
+//
+//     const handleQueryChange = (q: any) => {
+//         setDisplayQuery(q);
+//     }
+//
+//     return(
+//         <Modal
+//             title="Check Rule"
+//             visible={checkRuleModalVisible}
+//             onCancel={handleModalCheckCancel}
+//             footer={[
+//                 <Button key="cancel" onClick={handleModalCheckCancel}>
+//                     Cancel
+//                 </Button>,
+//                 <Button key="load" type="primary" onClick={handleModalCheckOk}>
+//                     Load
+//                 </Button>,
+//             ]}
+//         >
+//             <Input
+//                 placeholder="Result Name"
+//                 value={displayResult}
+//                 onChange={(e) => setDisplayResult(e.target.value)}
+//                 style={{ marginBottom: '10px' ,marginTop: '10px'}}
+//             />
+//             <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
+//                 <QueryBuilderAntD>
+//                     <QueryBuilder
+//                         fields={fields}
+//                         query={displayQuery}
+//                         onQueryChange={(q: any) => handleQueryChange(q)}
+//                         controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
+//                         controlElements={{
+//                             combinatorSelector: CombinatorSelector,
+//                             operatorSelector: operatorSelector
+//                         }}
+//                     />
+//                 </QueryBuilderAntD>
+//             </QueryBuilderDnD>
+//         </Modal>
+//     )
+// }
 
 const CheckRuleContent = ({ module_index,index }: { module_index: number,index:number }) => {
     const { modules, fields,setDisplayQuery } = useAppContext();
