@@ -60,14 +60,14 @@ interface StateProviderProps {
 
 export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
     const [query, setQuery] = useState<RuleGroupType>({
-        combinator: 'and',
+        combinator: 'Root',
         rules: [
             { field: 'feature 1', operator: '>', value: 'threshold 1' },
             { field: 'feature 2', operator: '<', value: 'threshold 2' },
         ],
     });
     const [displayQuery, setDisplayQuery] = useState<RuleGroupType>({
-        combinator: 'and',
+        combinator: 'Root',
         rules: [
             { field: 'feature 1', operator: '>', value: 'threshold 1' },
             { field: 'feature 2', operator: '<', value: 'threshold 2' },

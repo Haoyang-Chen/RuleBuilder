@@ -35,8 +35,7 @@ export const CustomValueSelector = ({
 
     const modeObj = multiple ? { mode: 'multiple' as const } : {};
 
-    const {fields,
-        setFields
+    const {fields
     } = useAppContext();
 
     return (

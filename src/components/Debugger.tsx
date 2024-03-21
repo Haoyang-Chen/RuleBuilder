@@ -2,13 +2,14 @@ import React from 'react';
 import {useAppContext} from "../AppContent";
 import {formatQuery} from "react-querybuilder";
 import {Button, List, Tooltip} from "antd";
+import {JSONTree} from "react-json-tree";
 
 const Debugger= () => {
     const {query, ruleResult,operationResultName,logic}=useAppContext();
     const {fields,setFields,originField}=useAppContext();
     //the added fields refer to the features that are added apart from the original features = fields-originfield
     const addedFields=fields.filter((field)=>!originField.includes(field));
-
+    const jsonLogic = formatQuery(query, 'jsonlogic');
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px',marginTop:'30px' }}>
@@ -16,6 +17,9 @@ const Debugger= () => {
                     <h3>Logic in SpEL format</h3>
                     <code>{formatQuery(query, 'spel')}</code><span title='result name'
                                                                    style={{color: 'red'}}> =={'>'} {ruleResult} </span>
+                    <h3>Logic in JSONLogic format</h3>
+                    <JSONTree data={jsonLogic} shouldExpandNodeInitially={()=>true} />
+
                     <h3>Operation Result Name</h3>
                     {/*<div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>*/}
                     {/*    {operationResultName.map((item, index) => (*/}
@@ -45,8 +49,7 @@ const Debugger= () => {
                             </div>
                         ))}
                     </div>
-                    <div style={{
-                    }}>
+                    <div style={{}}>
                         <h3>Saved Feature</h3>
                         <List
                             dataSource={addedFields}

@@ -2,14 +2,15 @@ import {QueryBuilderDnD} from '@react-querybuilder/dnd';
 import * as ReactDnD from 'react-dnd';
 import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
 import {
-    ActionWithRulesAndAddersProps,
+    ActionElement,
+    ActionWithRulesAndAddersProps, ActionWithRulesProps,
     CombinatorSelectorProps,
     FieldSelectorProps,
     findPath,
     OperatorSelectorProps,
     OptionList,
-    QueryBuilder, RuleGroupArray, RuleGroupType, RuleType,
-    ValueEditorProps
+    QueryBuilder, RuleGroupArray, RuleGroupType, RuleOrGroupArray, RuleType, useValueSelector,
+    ValueEditorProps, add,remove,update
 } from 'react-querybuilder';
 import {Button, Input, message} from 'antd';
 import 'react-querybuilder/dist/query-builder.css';
@@ -40,18 +41,64 @@ export const operatorSelector = (props: OperatorSelectorProps) => {
 };
 
 export const CombinatorSelector = (props: CombinatorSelectorProps) => {
+    const {
+        query,
+        setQuery,
+    } = useAppContext();
+
+    // const rules = props.rules as RuleGroupArray;
+    const path = props.path;
+    const depth=path.length;
+
+
     const options: OptionList = [
+        { name: 'IF', label: 'if'},
+        // { name: 'ELSE', label: 'else' },
         { name: 'And', label: 'and' },
         { name: 'Or', label: 'or' },
         { name:'Gor2', label:'GOR2'}
     ];
+
+    const handleOnChange = (value: string) => {
+        props.handleOnChange(value);
+        if (value==='IF'){
+            const ConGroup: RuleGroupType = {
+                combinator: 'CONDITION',
+                rules: [],
+            }
+            const YESGroup: RuleGroupType = {
+                combinator: 'YES',
+                rules: [],
+            }
+            const NOGroup: RuleGroupType = {
+                combinator: 'NO',
+                rules: [],
+            }
+            let newQuery=query;
+            const targetGroup=findPath(path,query) as RuleGroupType;
+            //for each rule in targetGroup.rules, remove(query,rule.path)
+            let index=0;
+            targetGroup.rules.forEach((rule)=>{
+                newQuery=remove(query,[...path,index]);
+                index+=1;
+            });
+            newQuery=update(newQuery,'combinator','IF',path);
+            // newQuery=remove(newQuery,path);
+            // newQuery=add(newQuery,{combinator: 'IF', rules: [],},path);
+            newQuery=add(newQuery,ConGroup,path);
+            newQuery=add(newQuery,YESGroup,path);
+            newQuery=add(newQuery,NOGroup,path);
+            setQuery(newQuery);
+        }
+
+    }
 
     return (
         <AntDValueSelector
             {...props}
             options={options}
             value={props.value}
-            handleOnChange={props.handleOnChange}
+            handleOnChange={handleOnChange}
         />
     );
 };
@@ -192,6 +239,7 @@ const CustomQueryBuilder = () => {
         //     setSaveGroupModalVisible(true);
         // };
         // const group= props.rules;
+        // console.log(props)
         const handleCopy=()=>{
             // setDisplayQuery();
             // console.log('group:',group);
@@ -215,6 +263,25 @@ const CustomQueryBuilder = () => {
             </>
         );
     };
+
+    // const AddGroupButton = (props: ActionWithRulesAndAddersProps) => {
+    //     const handleAddIFELSE = (props: ActionWithRulesAndAddersProps) => {
+    //         const IFGroup: RuleGroupType = {
+    //             combinator: 'IF',
+    //             rules: [],
+    //         }
+    //         const ELSEGroup: RuleGroupType = {
+    //             combinator: 'ELSE',
+    //             rules: [],
+    //         }
+    //         const updatedRules = [...query.rules, IFGroup, ELSEGroup];
+    //
+    //     };
+    //
+    //     return ();
+    //
+    // }
+
 
     const SaveRuleButton = () => {
         function handleSaveRule() {
@@ -336,8 +403,6 @@ const CustomQueryBuilder = () => {
         });
 
         setQuery(q);
-
-
     }
 
 
@@ -363,18 +428,20 @@ const CustomQueryBuilder = () => {
                                 <SaveRuleButton />
                             </div>
 
-                            <div style={{ marginBottom: '10px' ,marginTop: '10px', width:'600px'}}>
+                            <div style={{ marginBottom: '10px' ,marginTop: '10px', width:'800px'}}>
                                 <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
                                     <QueryBuilderAntD>
                                         <QueryBuilder
                                             fields={fields}
                                             query={query}
                                             onQueryChange={(q: any) => QueryChangeHandler(q)}
+                                            // onAddGroup={(q: any) => handleAddGroup(q)}
                                             showNotToggle
                                             addRuleToNewGroups
                                             controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
                                             controlElements={{
                                                 addRuleAction: AddRuleButtons,
+                                                // addGroupAction: AddGroupButton,
                                                 combinatorSelector: CombinatorSelector,
                                                 fieldSelector: CustomFieldSelector,
                                                 operatorSelector: operatorSelector,
@@ -388,9 +455,25 @@ const CustomQueryBuilder = () => {
                 }
                     { !isQueryBuilderVisible &&
                         <>
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '0px', marginBottom: '10px', width:'600px'}}>
-                                <h3 style={{ color: 'gray' }}>To Start, Add a Module and Logic</h3>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginTop: '0px',
+                                marginBottom: '10px',
+                                width: '800px'
+                            }}>
+                                <div style={{color: 'gray', textAlign: 'left'}}>
+                                    <h1 style={{marginBottom: '10px'}}>To start:</h1>
+                                    <ul style={{padding: 0, margin: 0, textAlign: 'left', paddingLeft: '20px'}}>
+                                        <ul style={{marginBottom: '5px'}}><h2>1. Import your feature source</h2></ul>
+                                        <ul style={{marginBottom: '5px'}}><h2>2. Create a new module</h2></ul>
+                                        <ul style={{marginBottom: '5px'}}><h2>3. Add a logic to the module</h2></ul>
+                                        <ul style={{marginBottom: '5px'}}><h2>4. Edit the Logic on the workspace</h2></ul>
+                                    </ul>
+                                </div>
                             </div>
+
                         </>
                     }
 

@@ -54,6 +54,7 @@ const SavedRuleList= () => {
         setLogic(modules[module_index].logics[idx]);
         setQuery(modules[module_index].logics[idx].logicQuery);
         setRuleResult(modules[module_index].logics[idx].logicName);
+        setIsQueryBuilderVisible(true);
     };
 
 
@@ -99,7 +100,7 @@ const SavedRuleList= () => {
             setFields([...fields,newField])
             setModules(modules.map((module, module_index) => {
                 if (module_index === index) {
-                    module.logics.push({id: logicID,logicName:logicName,logicQuery:{combinator: 'and', rules: []},operations:[]});
+                    module.logics.push({id: logicID,logicName:logicName,logicQuery:{combinator: 'Root', rules: []},operations:[]});
                 }
                 return module;
             }));
@@ -113,7 +114,6 @@ const SavedRuleList= () => {
                 }
                 return prevActivePanels;
             });
-            setIsQueryBuilderVisible(true);
         }
     }
 
