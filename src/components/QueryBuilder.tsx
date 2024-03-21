@@ -40,20 +40,18 @@ export const operatorSelector = (props: OperatorSelectorProps) => {
     />;
 };
 
+
+
 export const CombinatorSelector = (props: CombinatorSelectorProps) => {
     const {
         query,
         setQuery,
     } = useAppContext();
 
-    // const rules = props.rules as RuleGroupArray;
     const path = props.path;
-    const depth=path.length;
-
 
     const options: OptionList = [
         { name: 'IF', label: 'if'},
-        // { name: 'ELSE', label: 'else' },
         { name: 'And', label: 'and' },
         { name: 'Or', label: 'or' },
         { name:'Gor2', label:'GOR2'}
@@ -76,21 +74,17 @@ export const CombinatorSelector = (props: CombinatorSelectorProps) => {
             }
             let newQuery=query;
             const targetGroup=findPath(path,query) as RuleGroupType;
-            //for each rule in targetGroup.rules, remove(query,rule.path)
             let index=0;
             targetGroup.rules.forEach((rule)=>{
                 newQuery=remove(query,[...path,index]);
                 index+=1;
             });
             newQuery=update(newQuery,'combinator','IF',path);
-            // newQuery=remove(newQuery,path);
-            // newQuery=add(newQuery,{combinator: 'IF', rules: [],},path);
             newQuery=add(newQuery,ConGroup,path);
             newQuery=add(newQuery,YESGroup,path);
             newQuery=add(newQuery,NOGroup,path);
             setQuery(newQuery);
         }
-
     }
 
     return (
