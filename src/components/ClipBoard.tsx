@@ -2,12 +2,14 @@ import React from 'react';
 import {Button} from 'antd';
 import {QueryBuilder, RuleGroupType} from "react-querybuilder";
 import {useAppContext} from "../AppContent";
-import {CombinatorSelector, operatorSelector} from "./QueryBuilder";
-import * as ReactDnD from "react-dnd";
-import * as ReactDndHtml5Backend from "react-dnd-html5-backend";
 import {QueryBuilderAntD} from "@react-querybuilder/antd";
-import {QueryBuilderDnD} from "@react-querybuilder/dnd";
-
+import AddRuleButtons from "./RuleBuilderParts/AddRuleButtons";
+import AddGroupButton from "./RuleBuilderParts/AddGroupButton";
+import NotToggle from "./RuleBuilderParts/NotToggle";
+import CombinatorSelector from "./RuleBuilderParts/CombinatorSelector";
+import CustomFieldSelector from "./RuleBuilderParts/CustomFieldSelector";
+import OperatorSelector from "./RuleBuilderParts/OperatorSelector";
+import CustomValueEditor from "./RuleBuilderParts/CustomValueEditor";
 
 const ClipBoard= () => {
     const {
@@ -51,8 +53,13 @@ const ClipBoard= () => {
                             onQueryChange={(q: any) => setDisplayQuery(q)}
                             controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
                             controlElements={{
+                                addRuleAction: AddRuleButtons,
+                                addGroupAction: AddGroupButton,
+                                notToggle: NotToggle,
                                 combinatorSelector: CombinatorSelector,
-                                operatorSelector: operatorSelector
+                                fieldSelector: CustomFieldSelector,
+                                operatorSelector: OperatorSelector,
+                                valueEditor: CustomValueEditor
                             }}
                         />
                     </QueryBuilderAntD>

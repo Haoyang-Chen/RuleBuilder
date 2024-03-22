@@ -31,9 +31,9 @@ const App: React.FC = () => {
                         <CustomQueryBuilder/>
                     </div>
 
-                    <div style={{marginRight: '20px'}}>
-                        <ClipBoard/>
-                    </div>
+                    {/*<div style={{marginRight: '20px'}}>*/}
+                    {/*    <ClipBoard/>*/}
+                    {/*</div>*/}
                 </div>
                 <div style={{display: 'flex', position: 'absolute', top: '20px', right: '200px'}}>
                 <div style={{marginRight: '20px'}}>

@@ -1,14 +1,20 @@
-import React ,{useEffect}from 'react';
-import {Button, Input, List, Modal, Popover, Collapse, message} from 'antd';
-import {QueryBuilder} from "react-querybuilder";
+import React from 'react';
+import {Button, Popover, Collapse, message} from 'antd';
+import {QueryBuilder, RuleGroupType} from "react-querybuilder";
 import {useAppContext} from "../AppContent";
-import {CombinatorSelector, operatorSelector} from "./QueryBuilder";
+import CombinatorSelector from "./RuleBuilderParts/CombinatorSelector";
 import * as ReactDnD from "react-dnd";
 import * as ReactDndHtml5Backend from "react-dnd-html5-backend";
 import {QueryBuilderAntD} from "@react-querybuilder/antd";
 import {QueryBuilderDnD} from "@react-querybuilder/dnd";
 import { v4 as uuidv4 } from 'uuid';
-import {Field} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
+import OperatorSelector from "./RuleBuilderParts/OperatorSelector";
+import AddRuleButtons from "./RuleBuilderParts/AddRuleButtons";
+import AddGroupButton from "./RuleBuilderParts/AddGroupButton";
+import NotToggle from "./RuleBuilderParts/NotToggle";
+import CustomFieldSelector from "./RuleBuilderParts/CustomFieldSelector";
+import CustomValueEditor from "./RuleBuilderParts/CustomValueEditor";
+import RemoveGroupButton from "./RuleBuilderParts/RemoveGroupButton";
 
 
 const { Panel } = Collapse;
@@ -16,20 +22,11 @@ const { Panel } = Collapse;
 const SavedRuleList= () => {
     const {
         setQuery,
-        displayQuery,
-        setDisplayQuery,
-        savedRules,
-        setSavedRules,
-        checkRuleModalVisible,
-        setCheckRuleModalVisible,
         setRuleResult,
-        displayResult,
-        setDisplayResult,
         fields,
         setFields,
         modules,
         setModules,
-        logic,
         setLogic,
         activePanels,
         setActivePanels,
@@ -85,6 +82,18 @@ const SavedRuleList= () => {
 
     const handleAddLogic = (index:number) => {
         const logicName=window.prompt("Enter Logic Target name");
+        const ConGroup: RuleGroupType = {
+            combinator: 'Condition',
+            rules: [],
+        }
+        const YESGroup: RuleGroupType = {
+            combinator: 'Then',
+            rules: [],
+        }
+        const NOGroup: RuleGroupType = {
+            combinator: 'Else',
+            rules: [],
+        }
         if (!logicName || !logicName.trim()) {
             window.alert('Name cannot be empty');
             return -1;
@@ -100,7 +109,7 @@ const SavedRuleList= () => {
             setFields([...fields,newField])
             setModules(modules.map((module, module_index) => {
                 if (module_index === index) {
-                    module.logics.push({id: logicID,logicName:logicName,logicQuery:{combinator: 'Root', rules: []},operations:[]});
+                    module.logics.push({id: logicID,logicName:logicName,logicQuery:{combinator: 'IF', rules: [ConGroup,YESGroup,NOGroup]},operations:[]});
                 }
                 return module;
             }));
@@ -307,10 +316,14 @@ const CheckRuleContent = ({ module_index,index }: { module_index: number,index:n
                     onQueryChange={(q: any) => setDisplayQuery(q)}
                     controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
                     controlElements={{
+                        addRuleAction: AddRuleButtons,
+                        addGroupAction: AddGroupButton,
+                        removeGroupAction: RemoveGroupButton,
+                        notToggle: NotToggle,
                         combinatorSelector: CombinatorSelector,
-                        operatorSelector: operatorSelector,
-                        addRuleAction: () => null,
-                        addGroupAction: () => null,
+                        fieldSelector: CustomFieldSelector,
+                        operatorSelector: OperatorSelector,
+                        valueEditor: CustomValueEditor
                     }}
                 />
             </QueryBuilderAntD>
