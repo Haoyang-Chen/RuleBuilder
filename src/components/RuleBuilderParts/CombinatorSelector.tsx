@@ -10,12 +10,14 @@ export const CombinatorSelector = (props: CombinatorSelectorProps) => {
     } = useAppContext();
 
     const path = props.path;
+    const parentPath = path.slice(0, -1);
+    const parentGroup = findPath(parentPath, query) as RuleGroupType;
+    const parentCombinator = parentGroup.combinator;
 
     let options: OptionList = [
-        { name: 'IF', label: 'if'},
         { name: 'And', label: 'and' },
         { name: 'Or', label: 'or' },
-        { name:'Gor2', label:'GOR2'}
+        { name:'G-or-2', label:'G-or-2'}
     ];
 
     const handleOnChange = (value: string) => {
@@ -23,7 +25,7 @@ export const CombinatorSelector = (props: CombinatorSelectorProps) => {
         const oldCombinator=oldgroup.combinator;
         props.handleOnChange(value);
 
-        if (oldCombinator==='IF' && value!=='IF'){
+        if (oldCombinator==='if' && value!=='if'){
             const targetGroup=findPath(path,query) as RuleGroupType;
             let newQuery=query;
             for (let i=0;i<targetGroup.rules.length;i++) {
@@ -33,7 +35,7 @@ export const CombinatorSelector = (props: CombinatorSelectorProps) => {
             setQuery(newQuery);
         }
 
-        if (value==='IF'){
+        if (value==='if'){
             const ConGroup: RuleGroupType = {
                 combinator: 'Condition',
                 rules: [],
@@ -51,19 +53,31 @@ export const CombinatorSelector = (props: CombinatorSelectorProps) => {
             for (let i=0;i<targetGroup.rules.length;i++) {
                 newQuery = remove(newQuery, [...path, 0]);
             }
-            newQuery=update(newQuery,'combinator','IF',path);
+            newQuery=update(newQuery,'combinator','if',path);
             newQuery=add(newQuery,ConGroup,path);
+
             newQuery=add(newQuery,YESGroup,path);
             newQuery=add(newQuery,NOGroup,path);
             setQuery(newQuery);
         }
     }
+
+
     const level=props.level
     if (level===0){
-        options= [{ name: 'IF', label: 'if'}];
+        options= [{ name: 'if', label: 'if'}];
     }
     if (props.value==='Condition'||props.value==='Then'||props.value==='Else'){
-        options=[{name:props.value.toUpperCase(),label:props.value}];
+        options=[{name:props.value,label:props.value}];
+    }
+    if (parentCombinator==='Then'||parentCombinator==='Else'){
+        options=[{name:'if',label:'if'}];
+    }
+    if (parentCombinator==='Condition'){
+        options=[
+            { name: 'And', label: 'and' },
+            { name: 'Or', label: 'or' },
+            { name:'G-or-2', label:'G-or-2'}];
     }
 
     return (

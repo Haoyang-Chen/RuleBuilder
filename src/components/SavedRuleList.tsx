@@ -31,6 +31,9 @@ const SavedRuleList= () => {
         activePanels,
         setActivePanels,
         setIsQueryBuilderVisible,
+        query,
+        logic,
+        ruleResult
     }=useAppContext();
 
 
@@ -44,10 +47,32 @@ const SavedRuleList= () => {
     //     setDisplayResult(savedQuery.logicName);
     //     setCheckRuleModalVisible(true);
     // };
+    function handleSaveRule() {
+        const id = logic.id;
+        let newModules = [...modules];
+        let moduleIndex = null;
+        let logicIndex = null;
 
+        newModules.forEach((module, mIndex) => {
+            module.logics.forEach((item, lIndex) => {
+                if (item.id === id) {
+                    moduleIndex = mIndex;
+                    logicIndex = lIndex;
+                    newModules[moduleIndex].logics[logicIndex].logicQuery = query;
+                    newModules[moduleIndex].logics[logicIndex].logicName = ruleResult;
+                    newModules[moduleIndex].logics[logicIndex].operations = logic.operations;
+                }
+            });
+        });
+
+        if (moduleIndex !== null && logicIndex !== null) {
+            setModules(newModules);
+        }
+    }
 
 
     const handleDirectLoad = (module_index: number,idx:number) => {
+        handleSaveRule();
         setLogic(modules[module_index].logics[idx]);
         setQuery(modules[module_index].logics[idx].logicQuery);
         setRuleResult(modules[module_index].logics[idx].logicName);
@@ -81,7 +106,7 @@ const SavedRuleList= () => {
     };
 
     const handleAddLogic = (index:number) => {
-        const logicName=window.prompt("Enter Logic Target name");
+        const logicName=window.prompt("Enter Logic name");
         const ConGroup: RuleGroupType = {
             combinator: 'Condition',
             rules: [],
@@ -98,18 +123,18 @@ const SavedRuleList= () => {
             window.alert('Name cannot be empty');
             return -1;
         }
-        const name = window.prompt("Enter Description:");
-        if (!name || !name.trim()) {
-            window.alert('Description cannot be empty');
-            return -1;
-        }
+        // const name = window.prompt("Enter Description:");
+        // if (!name || !name.trim()) {
+        //     window.alert('Description cannot be empty');
+        //     return -1;
+        // }
         const logicID=uuidv4();
         if(logicName){
-            const newField={id:logicID,name:name,label:logicName};
-            setFields([...fields,newField])
+            // const newField={id:logicID,name:name,label:logicName};
+            // setFields([...fields,newField])
             setModules(modules.map((module, module_index) => {
                 if (module_index === index) {
-                    module.logics.push({id: logicID,logicName:logicName,logicQuery:{combinator: 'IF', rules: [ConGroup,YESGroup,NOGroup]},operations:[]});
+                    module.logics.push({id: logicID,logicName:logicName,logicQuery:{combinator: 'if', rules: [ConGroup,YESGroup,NOGroup]},operations:[]});
                 }
                 return module;
             }));
@@ -143,8 +168,8 @@ const SavedRuleList= () => {
                 backgroundColor: '#EBF5FB'
             }}>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                    <h3>Saved Modules</h3>
-                    <Button onClick={handleAddModule} style={{marginLeft:'21px'}} type={"primary"}>+Module</Button>
+                    <h3>Saved Steps</h3>
+                    <Button onClick={handleAddModule} style={{marginLeft:'21px'}} type={"primary"}>+Step</Button>
                 </div>
 
                 <Collapse accordion={false}
@@ -190,7 +215,7 @@ const SavedRuleList= () => {
                                                 {/*</Popover>*/}
                                                 <Popover content={<CheckRuleContent module_index={module_index} index={idx}/>}
                                                          trigger="hover"
-                                                         placement={"bottom"}>
+                                                         placement={"right"}>
                                                     <Button onClick={() => handleDirectLoad(module_index, idx)}
                                                             style={{marginRight: '5px'}}>Edit</Button>
                                                 </Popover>

@@ -2,26 +2,29 @@ import {ActionWithRulesAndAddersProps, add, RuleGroupType} from "react-querybuil
 import {Button} from "antd";
 import React from "react";
 import {useAppContext} from "../../AppContent";
+import {Field} from "react-querybuilder/dist/cjs/react-querybuilder.cjs.development";
 
 const AddGroupButton = (props: ActionWithRulesAndAddersProps) => {
     const {
         query,
         setQuery,
-        ruleResult,
-        setRuleResult,
-        fields,
-        logic,
-        isQueryBuilderVisible,
     }=useAppContext();
+
     const group=props.ruleOrGroup as RuleGroupType;
     // console.log('group:',group);
     const combinator=group.combinator;
+    let isLast=false;
+    if (group.rules.length===0 || (group.combinator!=='Condition'&&group.combinator!=='if'&&group.combinator!=='Then'&&group.combinator!=='Else')){
+        isLast=true;
+    }
+
     let isIfGroup=false;
-    if (combinator==='IF'){
+
+    if (combinator==='if'||combinator===''){
         isIfGroup=true;
     }
     let isCondition=false;
-    if (combinator==='Condition'){
+    if (combinator!=='if'&&combinator!=='Then'&&combinator!=='Else'&&combinator!==''){
         isCondition=true;
     }
     const handleAddResult=()=>{
@@ -29,12 +32,15 @@ const AddGroupButton = (props: ActionWithRulesAndAddersProps) => {
         setQuery(newQuery);
     }
 
-    return (
-        <>
-            {
-                !isIfGroup &&
+    if (isIfGroup){
+        return (
+            <></>
+        );
+    }else {
+        if (isLast){
+            return (
                 <>
-                    <Button onClick={props.handleOnClick} type={'primary'}>+Nested Rules</Button>
+                    <Button onClick={props.handleOnClick}>+Nested Rules</Button>
                     <>
                         {
                             !isCondition &&
@@ -42,8 +48,35 @@ const AddGroupButton = (props: ActionWithRulesAndAddersProps) => {
                         }
                     </>
                 </>
-            }
-        </>
-    );
+            );
+        }
+        else{
+            return (
+                <>
+                    {
+                        !isCondition &&
+                        <Button onClick={handleAddResult} type={'dashed'}>+Result</Button>
+                    }
+                </>
+            )
+        }
+    }
+
+    // return (
+    //     <>
+    //         {
+    //             (!isIfGroup && isLast) &&
+    //             <>
+    //                 <Button onClick={props.handleOnClick}>+Nested Rules</Button>
+    //                 <>
+    //                     {
+    //                         !isCondition &&
+    //                         <Button onClick={handleAddResult} type={'dashed'}>+Result</Button>
+    //                     }
+    //                 </>
+    //             </>
+    //         }
+    //     </>
+    // );
 }
 export default AddGroupButton;

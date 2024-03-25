@@ -49,7 +49,7 @@ const App: React.FC = () => {
                         <ClearRuleButton/>
                     </div>
                 </div>
-                <Debugger/>
+                {/*<Debugger/>*/}
             </div>
             <SaveGroup/>
             {/*<SaveRule/>*/}

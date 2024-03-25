@@ -32,13 +32,18 @@ const AddRuleButtons = (props: ActionWithRulesAndAddersProps) => {
     // console.log('group:',group);
     const combinator=group.combinator;
     let isIfGroup=false;
-    if (combinator==='IF'||combinator==='Then'||combinator==='Else'){
+    if (combinator==='if'||combinator==='Then'||combinator==='Else'||combinator===''){
         isIfGroup=true;
+    }
+
+    let isLast=false;
+    if (group.rules.length===0 || group.combinator!=='Condition'){
+        isLast=true;
     }
 
     return(
         <>
-            { !isIfGroup &&
+            { (!isIfGroup && isLast) &&
                 <>
                     {/*<Button onClick={handleSaveGroup} style={{backgroundColor: '#D5F5E3'}}>Save Group</Button>*/}
                     {/*<Button onClick={handleCopy} style={{backgroundColor: '#D5F5E3'}}>Copy</Button>*/}

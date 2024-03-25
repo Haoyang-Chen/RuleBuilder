@@ -2,9 +2,9 @@ import {QueryBuilderDnD} from '@react-querybuilder/dnd';
 import * as ReactDnD from 'react-dnd';
 import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
 import {
-    QueryBuilder,
+    QueryBuilder, RuleGroupType,
 } from 'react-querybuilder';
-import {Input} from 'antd';
+import {Input, message} from 'antd';
 import 'react-querybuilder/dist/query-builder.css';
 import {
     QueryBuilderAntD
@@ -59,8 +59,12 @@ const CustomQueryBuilder = () => {
         ruleResult,
         setRuleResult,
         fields,
+        originField,
+        setFields,
         logic,
         isQueryBuilderVisible,
+        modules,
+        setModules,
         }=useAppContext();
 
 
@@ -87,10 +91,53 @@ const CustomQueryBuilder = () => {
         return rules;
     }
 
+    function handleSaveRule() {
+        const id = logic.id;
+        let newModules = [...modules];
+        let moduleIndex = null;
+        let logicIndex = null;
+
+        newModules.forEach((module, mIndex) => {
+            module.logics.forEach((item, lIndex) => {
+                if (item.id === id) {
+                    moduleIndex = mIndex;
+                    logicIndex = lIndex;
+                    newModules[moduleIndex].logics[logicIndex].logicQuery = query;
+                    newModules[moduleIndex].logics[logicIndex].logicName = ruleResult;
+                    newModules[moduleIndex].logics[logicIndex].operations = logic.operations;
+                }
+            });
+        });
+
+        if (moduleIndex !== null && logicIndex !== null) {
+            setModules(newModules);
+        }
+    }
+
     const QueryChangeHandler = (q: any) => {
         //find the changed rule
         const OriginalRules = GetRules(query);
         const ChangedRules = GetRules(q);
+
+        ChangedRules.forEach((rule: any) => {
+            if (rule.operator==='Result'){
+                let found=false;
+                let newField = fields.filter(field => !originField.includes(field));
+                newField.forEach((field) => {
+                    if (field.id===rule.id){
+                        field.name=rule.value;
+                        field.label=rule.value;
+                        found=true;
+                    }
+                });
+                if (!found){
+                    newField.push({name:rule.value,label:rule.value,id:rule.id});
+                }
+                setFields([...originField,...newField]);
+            }
+            // handleSaveRule();
+        });
+
         OriginalRules.forEach((rule: any) => {
             const changedRule = ChangedRules.find((r: any) => r.id === rule.id && r !== rule);
             if (changedRule) {
@@ -143,6 +190,26 @@ const CustomQueryBuilder = () => {
         setQuery(q);
     }
 
+    const CustomGetRuleGroupClassname = (ruleGroup: any) => {
+        if (ruleGroup.combinator === 'if') {
+            return 'IfGroup';
+        }
+        if (ruleGroup.combinator === 'Condition') {
+            return 'ConditionGroup';
+        }
+        if (ruleGroup.combinator === 'Then') {
+            return 'ThenGroup';
+        }
+        if (ruleGroup.combinator === 'Else') {
+            return 'ElseGroup';
+        }
+        return '';
+    }
+
+    const handleAddGroup = (q: any) => {
+        return {combinator: '', rules: []};
+    }
+
 
     return (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -163,7 +230,7 @@ const CustomQueryBuilder = () => {
                                 {/*    style={{ marginBottom: '10px', marginRight: '10px', marginTop: '10px', width: '150px' }}*/}
                                 {/*/>*/}
                                 {/*<Button onClick={() => addToFeature(fields, setFields, ruleResult)} style={{backgroundColor: '#FDEBD0', marginRight: '10px'}}>+Feature</Button>*/}
-                                <SaveRuleButton />
+                                {/*<SaveRuleButton />*/}
                             </div>
 
                             <div style={{ marginBottom: '10px' ,marginTop: '10px', width:'800px'}}>
@@ -173,9 +240,10 @@ const CustomQueryBuilder = () => {
                                             fields={fields}
                                             query={query}
                                             onQueryChange={(q: any) => QueryChangeHandler(q)}
-                                            // onAddGroup={(q: any) => handleAddGroup(q)}
+                                            onAddGroup={(q: any) => handleAddGroup(q)}
                                             showNotToggle
                                             addRuleToNewGroups
+                                            getRuleGroupClassname={ruleGroup => CustomGetRuleGroupClassname(ruleGroup)}
                                             controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
                                             controlElements={{
                                                 addRuleAction: AddRuleButtons,

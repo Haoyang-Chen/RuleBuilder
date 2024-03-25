@@ -7,7 +7,7 @@ const NotToggle = (props: NotToggleProps) => {
     // console.log('group:',group);
     const combinator=group.combinator;
     let isIfGroup=false;
-    if (combinator==='IF' || combinator==='Then' || combinator==='Else'){
+    if (combinator==='if' || combinator==='Then' || combinator==='Else'||combinator===''){
         isIfGroup=true;
     }
 

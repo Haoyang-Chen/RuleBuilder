@@ -8,5 +8,25 @@ button.ruleGroup-remove {
 
 .ruleGroup{
     /*color for blue*/
-    background-color: rgba(53,119, 255, 0.15);
+    background-color: rgba(235, 245, 251, 0.7);
+}
+
+.IfGroup{
+    /*color for blue*/
+    background-color: rgba(229, 231, 233, 1);
+}
+
+.ConditionGroup{
+    /*color for yellow*/
+    background-color: rgba(253, 235, 208, 1);
+}
+
+.ThenGroup{
+    /*color for green*/
+    background-color: rgba(115, 198, 182, 1);
+}
+
+.ElseGroup{
+    /*color for red*/
+    background-color: rgba(236, 112, 99, 1);
 }
