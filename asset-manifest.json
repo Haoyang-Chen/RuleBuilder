@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/RuleBuilder/static/css/main.a4fd3e70.css",
-    "main.js": "/RuleBuilder/static/js/main.7776ce71.js",
+    "main.js": "/RuleBuilder/static/js/main.d0f377e0.js",
     "static/js/592.e8562dbe.chunk.js": "/RuleBuilder/static/js/592.e8562dbe.chunk.js",
     "index.html": "/RuleBuilder/index.html",
     "main.a4fd3e70.css.map": "/RuleBuilder/static/css/main.a4fd3e70.css.map",
-    "main.7776ce71.js.map": "/RuleBuilder/static/js/main.7776ce71.js.map",
+    "main.d0f377e0.js.map": "/RuleBuilder/static/js/main.d0f377e0.js.map",
     "592.e8562dbe.chunk.js.map": "/RuleBuilder/static/js/592.e8562dbe.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a4fd3e70.css",
-    "static/js/main.7776ce71.js"
+    "static/js/main.d0f377e0.js"
   ]
 }
