@@ -15,7 +15,7 @@ export const OperatorSelector = (props: OperatorSelectorProps) => {
     ];
 
     if (props.value==='Result'){
-        return <span style={{fontSize:'20px',color:'red',fontWeight:"bold"}}>Result Name: </span>;
+        return <span style={{fontSize:'20px',color:'white',fontWeight:"bold"}}>Result Name: </span>;
     }
 
     return <AntDValueSelector
