@@ -220,7 +220,7 @@ const SavedRuleList= () => {
                                                             style={{marginRight: '5px'}}>Edit</Button>
                                                 </Popover>
                                                 <Button onClick={() => handleDeleteGroup(module_index, idx)}
-                                                        type={"primary"}>x</Button>
+                                                        type={"text"}>x</Button>
                                             </div>
                                             {/*<EditRuleModal module_index={module_index} index={idx}/>*/}
                                         </div>

@@ -2,7 +2,8 @@ import {QueryBuilderDnD} from '@react-querybuilder/dnd';
 import * as ReactDnD from 'react-dnd';
 import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
 import {
-    QueryBuilder, RuleGroupType,
+    findPath,
+    QueryBuilder, RuleGroupType, RuleType,
 } from 'react-querybuilder';
 import {Input, message} from 'antd';
 import 'react-querybuilder/dist/query-builder.css';
@@ -22,6 +23,7 @@ import OperatorSelector from "./RuleBuilderParts/OperatorSelector";
 import CombinatorSelector from "./RuleBuilderParts/CombinatorSelector";
 import CustomValueEditor from "./RuleBuilderParts/CustomValueEditor";
 import RemoveGroupButton from "./RuleBuilderParts/RemoveGroupButton";
+import RemoveRuleButton from "./RuleBuilderParts/RemoveRuleButton";
 
 const addToFeature = (fields: Field[], setFields: React.Dispatch<React.SetStateAction<Field[]>>,label:string) => {
     if (!label.trim()) {
@@ -190,7 +192,7 @@ const CustomQueryBuilder = () => {
         setQuery(q);
     }
 
-    const CustomGetRuleGroupClassname = (ruleGroup: any) => {
+    const CustomGetRuleGroupClassname = (ruleGroup: RuleGroupType) => {
         if (ruleGroup.combinator === 'if') {
             return 'IfGroup';
         }
@@ -204,10 +206,39 @@ const CustomQueryBuilder = () => {
             return 'ElseGroup';
         }
         return '';
+        // console.log('ruleGroup:',ruleGroup)
+        //
+        // const path=ruleGroup.path as number[];
+        // const length=path.length;
+        // return 'level-'+length+'-group';
     }
 
-    const handleAddGroup = (q: any) => {
+    const handleAddGroup = (ruleGroup: RuleGroupType, parentPath: number[], query: RuleGroupType, context?: any) => {
+        // console.log('parentPath:',parentPath)
+        const ConGroup: RuleGroupType = {
+            combinator: 'Condition',
+            rules: [],
+        }
+        const YESGroup: RuleGroupType = {
+            combinator: 'Then',
+            rules: [],
+        }
+        const NOGroup: RuleGroupType = {
+            combinator: 'Else',
+            rules: [],
+        }
+        const parent=findPath(parentPath,query) as RuleGroupType;
+        // console.log('parent:',parent);
+        const parentCombinator=parent.combinator;
+        if (parentCombinator==='Then'||parentCombinator==='Else'){
+            return {combinator: 'if', rules: [ConGroup,YESGroup,NOGroup]};
+        }
         return {combinator: '', rules: []};
+    }
+
+    const handleAddRule = (rule: RuleType, parentPath: number[], query: RuleGroupType, context?: any) => {
+        // console.log('q:', q);
+        return {field: '', operator: '', value: ''};
     }
 
 
@@ -233,22 +264,24 @@ const CustomQueryBuilder = () => {
                                 {/*<SaveRuleButton />*/}
                             </div>
 
-                            <div style={{ marginBottom: '10px' ,marginTop: '10px', width:'800px'}}>
-                                <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
+                            <div style={{ marginBottom: '10px' ,marginTop: '10px',marginLeft:'-140px'}}>
+                                {/*<QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>*/}
                                     <QueryBuilderAntD>
                                         <QueryBuilder
                                             fields={fields}
                                             query={query}
                                             onQueryChange={(q: any) => QueryChangeHandler(q)}
-                                            onAddGroup={(q: any) => handleAddGroup(q)}
+                                            onAddGroup={(ruleGroup, parentPath, query, context) => handleAddGroup(ruleGroup, parentPath, query, context)}
+                                            onAddRule={(rule, parentPath, query, context) => handleAddRule(rule, parentPath, query, context)}
                                             showNotToggle
                                             addRuleToNewGroups
                                             getRuleGroupClassname={ruleGroup => CustomGetRuleGroupClassname(ruleGroup)}
-                                            controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
+                                            // controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
                                             controlElements={{
                                                 addRuleAction: AddRuleButtons,
                                                 addGroupAction: AddGroupButton,
                                                 removeGroupAction: RemoveGroupButton,
+                                                removeRuleAction: RemoveRuleButton,
                                                 notToggle: NotToggle,
                                                 combinatorSelector: CombinatorSelector,
                                                 fieldSelector: CustomFieldSelector,
@@ -257,7 +290,7 @@ const CustomQueryBuilder = () => {
                                             }}
                                         />
                                     </QueryBuilderAntD>
-                                </QueryBuilderDnD>
+                                {/*</QueryBuilderDnD>*/}
                             </div>
                         </>
                 }

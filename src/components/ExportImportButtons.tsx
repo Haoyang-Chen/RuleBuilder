@@ -3,10 +3,10 @@ import { Button } from 'antd';
 import { useAppContext } from '../AppContent';
 
 export const ExportButton = () => {
-    const { query, savedGroups, savedRules, operationResultName, ruleResult, fields } = useAppContext();
+    const { query, savedGroups, savedRules, operationResultName, ruleResult, fields ,logic,modules} = useAppContext();
 
     const exportState = async () => {
-        const state = { query, savedGroups, savedRules, operationResultName, ruleResult, fields };
+        const state = { query, savedGroups, savedRules, operationResultName, ruleResult, fields, logic,modules};
         const data = JSON.stringify(state);
 
         // Create a Blob from the JSON data
@@ -32,7 +32,7 @@ export const ExportButton = () => {
 };
 
 export const ImportButton = () => {
-    const { setQuery, setSavedGroups, setSavedRules, setOperationResultName, setRuleResult, setFields } = useAppContext();
+    const { setQuery, setSavedGroups, setSavedRules, setOperationResultName, setRuleResult, setFields,setLogic,setModules } = useAppContext();
 
     const importState = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -50,6 +50,8 @@ export const ImportButton = () => {
                     setOperationResultName(data.operationResultName);
                     setRuleResult(data.ruleResult);
                     setFields(data.fields);
+                    setLogic(data.logic);
+                    setModules(data.modules);
                 }
             } catch (error) {
                 console.error('Error parsing JSON file:', error);

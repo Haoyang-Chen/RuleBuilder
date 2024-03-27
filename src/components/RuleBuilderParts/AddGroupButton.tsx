@@ -31,6 +31,17 @@ const AddGroupButton = (props: ActionWithRulesAndAddersProps) => {
         const newQuery=add(query,{ field: '', operator: 'Result', value: '' },props.path);
         setQuery(newQuery);
     }
+    if (combinator==='Then'||combinator==='Else'){
+        return (
+            <>
+                <Button onClick={props.handleOnClick}>+if</Button>
+                {
+                    !isCondition &&
+                    <Button onClick={handleAddResult} type={'dashed'}>+Result</Button>
+                }
+            </>
+        );
+    }
 
     if (isIfGroup){
         return (
@@ -61,6 +72,7 @@ const AddGroupButton = (props: ActionWithRulesAndAddersProps) => {
             )
         }
     }
+
 
     // return (
     //     <>

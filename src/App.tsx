@@ -15,8 +15,8 @@ import ClipBoard from "./components/ClipBoard";
 const App: React.FC = () => {
     return (
         <StateProvider>
-            <div style={{position: 'relative'}}>
-                <div style={{display: 'flex', justifyContent: 'center', paddingTop: '50px'}}>
+            <div style={{position: 'relative', overflowX:"auto"}}>
+                <div style={{display: 'flex', justifyContent: 'center', paddingTop: '50px', overflowX:'auto'}}>
                     <div style={{marginRight: '20px'}}>
                         <SavedRuleList/>
                     </div>

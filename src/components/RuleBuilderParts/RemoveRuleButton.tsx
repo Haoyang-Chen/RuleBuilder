@@ -2,7 +2,7 @@ import {ActionWithRulesAndAddersProps, RuleGroupType} from "react-querybuilder";
 import {Button} from "antd";
 import React from "react";
 
-const RemoveGroupButton = (props: ActionWithRulesAndAddersProps) => {
+const RemoveRuleButton = (props: ActionWithRulesAndAddersProps) => {
 
     return (
         <>
@@ -13,4 +13,4 @@ const RemoveGroupButton = (props: ActionWithRulesAndAddersProps) => {
         </>
     );
 }
-export default RemoveGroupButton;
+export default RemoveRuleButton;

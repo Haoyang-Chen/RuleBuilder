@@ -2,6 +2,7 @@ import {add, CombinatorSelectorProps, findPath, OptionList, remove, RuleGroupTyp
 import {useAppContext} from "../../AppContent";
 import {AntDValueSelector} from "@react-querybuilder/antd";
 import React from "react";
+import {Button} from "antd";
 
 export const CombinatorSelector = (props: CombinatorSelectorProps) => {
     const {
@@ -67,11 +68,68 @@ export const CombinatorSelector = (props: CombinatorSelectorProps) => {
     if (level===0){
         options= [{ name: 'if', label: 'if'}];
     }
-    if (props.value==='Condition'||props.value==='Then'||props.value==='Else'){
-        options=[{name:props.value,label:props.value}];
+
+    if (props.value==='Condition'){
+        return (
+            <>
+                <span style={{
+                    // backgroundColor: 'yellow',
+                    // color: 'yellow',
+                    fontWeight: 'bold',
+                    fontSize: '25px',
+                    borderRadius: '5px',
+                    padding: '3px'
+                }}>{props.value}</span>
+            </>
+        )
     }
-    if (parentCombinator==='Then'||parentCombinator==='Else'){
-        options=[{name:'if',label:'if'}];
+    if (props.value==='Then'){
+        return (
+            <>
+                <span style={{
+                    // backgroundColor: '#ff0000',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    fontSize: '25px',
+                    // borderRadius: '5px',
+                    padding: '3px'
+                }}>{props.value}</span>
+            </>
+        )
+    }
+    if (props.value==='Else'){
+        return (
+            <>
+                <span style={{
+                    // backgroundColor: '#ff0000',
+                    // color: 'red',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    fontSize: '25px',
+                    // borderRadius: '5px',
+                    padding: '3px'
+                }}>{props.value}</span>
+            </>
+        )
+    }
+    if (props.value==='if'){
+        return (
+            <>
+                <span style={{
+                    // backgroundColor: '#ff0000',
+                    // color: 'red',
+                    color: 'rgba(52, 73, 94,1)',
+                    fontWeight: 'bold',
+                    fontSize: '25px',
+                    // borderRadius: '5px',
+                    padding: '3px'
+                }}>{props.value}</span>
+            </>
+        )
+    }
+
+    if (parentCombinator === 'Then' || parentCombinator === 'Else') {
+        options = [{name:'if',label:'if'}];
     }
     if (parentCombinator==='Condition'){
         options=[
