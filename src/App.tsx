@@ -16,8 +16,8 @@ const App: React.FC = () => {
     return (
         <StateProvider>
             <div style={{position: 'relative', overflowX:"auto"}}>
-                <div style={{display: 'flex', justifyContent: 'center', paddingTop: '50px', overflowX:'auto'}}>
-                    <div style={{marginRight: '20px'}}>
+                <div style={{display: 'flex', justifyContent: 'left', paddingTop: '50px', overflowX:'auto'}}>
+                    <div style={{position:'relative', marginRight: '20px', marginLeft:'20px', minWidth:'300px'}}>
                         <SavedRuleList/>
                     </div>
                     {/*<div style={{marginRight: '20px'}}>*/}
@@ -27,7 +27,7 @@ const App: React.FC = () => {
                     {/*    <SavedGroupList/>*/}
                     {/*</div>*/}
 
-                    <div style={{marginRight: '20px'}}>
+                    <div style={{marginRight: '20px',position:'relative',}}>
                         <CustomQueryBuilder/>
                     </div>
 
